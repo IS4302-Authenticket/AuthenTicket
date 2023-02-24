@@ -1,0 +1,4107 @@
+{
+  "contractName": "Ticket",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract Event",
+          "name": "eventAddress",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "zoneName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "zoneCapacityDecreased",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "zoneCapacityAfter",
+          "type": "uint256"
+        }
+      ],
+      "name": "ZoneCapacityDecreased",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "organiser",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "zoneName",
+          "type": "string"
+        }
+      ],
+      "name": "ZoneDetailsAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "zoneName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "zoneCapacity",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "zonePrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "zonePriceCap",
+          "type": "uint256"
+        }
+      ],
+      "name": "ZoneTicketCheck",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "name": "ticketMappings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "zoneCapacity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "zonePrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceCap",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "eventID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "zoneNameInput",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "zoneCapacityInput",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "zonePriceInput",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceCapInput",
+          "type": "uint256"
+        }
+      ],
+      "name": "addZoneDetails",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "eventID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "zoneName",
+          "type": "string"
+        }
+      ],
+      "name": "getZoneDetails",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "decreaseZoneCapacity",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract Event\",\"name\":\"eventAddress\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"eventID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"zoneName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"zoneCapacityDecreased\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"zoneCapacityAfter\",\"type\":\"uint256\"}],\"name\":\"ZoneCapacityDecreased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"organiser\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"eventID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"zoneName\",\"type\":\"string\"}],\"name\":\"ZoneDetailsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"eventID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"zoneName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"zoneCapacity\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"zonePrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"zonePriceCap\",\"type\":\"uint256\"}],\"name\":\"ZoneTicketCheck\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"eventID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"zoneNameInput\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"zoneCapacityInput\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"zonePriceInput\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceCapInput\",\"type\":\"uint256\"}],\"name\":\"addZoneDetails\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decreaseZoneCapacity\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"eventID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"zoneName\",\"type\":\"string\"}],\"name\":\"getZoneDetails\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"ticketMappings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"zoneCapacity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"zonePrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceCap\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"addZoneDetails(uint256,string,uint256,uint256,uint256)\":{\"details\":\"Function for event organisers to add zone details NOTE: If zone is already present, then input will overwrite existing zone details\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Ticket.sol\":\"Ticket\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Event.sol\":{\"keccak256\":\"0x5230b5e80f76f5ff5ff049d1f1cb452abaf0739be58f8b6928b448c7d7d14ce0\",\"urls\":[\"bzz-raw://e23c08844fb73291d00976123aa4895f7194211144729c3eee3c447cdfce8327\",\"dweb:/ipfs/QmNv3QvMPRyAHRyPg5rXBcjNqs3E6ycvE3ZkFm8oCMiaXo\"]},\"project:/contracts/Ticket.sol\":{\"keccak256\":\"0x840f91e136e79a820e7136d37fdfd379cfa45b4bfdeef89e9c1b300797c61d87\",\"urls\":[\"bzz-raw://4567785a6aaccee29e1d17e1fb920200c45f0d20e313c9035d46565812694752\",\"dweb:/ipfs/Qma1f7KzhXRWSLeS88pmZXtk2yUTELhNSdt6Y1kcCH6qHE\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516108d03803806108d08339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505061083c806100946000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c806353c101ea146100515780637a2a152d146101165780639961b2d214610138578063fba628b914610233575b600080fd5b6101146004803603604081101561006757600080fd5b81019080803590602001909291908035906020019064010000000081111561008e57600080fd5b8201836020820111156100a057600080fd5b803590602001918460018302840111640100000000831117156100c257600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061031a565b005b61011e610494565b604051808215151515815260200191505060405180910390f35b610219600480360360a081101561014e57600080fd5b81019080803590602001909291908035906020019064010000000081111561017557600080fd5b82018360208201111561018757600080fd5b803590602001918460018302840111640100000000831117156101a957600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929080359060200190929190803590602001909291908035906020019092919050505061049d565b604051808215151515815260200191505060405180910390f35b6102f66004803603604081101561024957600080fd5b81019080803590602001909291908035906020019064010000000081111561027057600080fd5b82018360208201111561028257600080fd5b803590602001918460018302840111640100000000831117156102a457600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610799565b60405180848152602001838152602001828152602001935050505060405180910390f35b6103226107e6565b60016000848152602001908152602001600020826040518082805190602001908083835b602083106103695780518252602082019150602081019050602083039250610346565b6001836020036101000a0380198251168184511680821785525050505050509050019150509081526020016040518091039020604051806060016040529081600082015481526020016001820154815260200160028201548152505090507f82ee94439ccc772bfb3e2e62358e945882dd0e55cfa28522d33543ccf6b44f2f83838360000151846020015185604001516040518086815260200180602001858152602001848152602001838152602001828103825286818151815260200191508051906020019080838360005b83811015610451578082015181840152602081019050610436565b50505050905090810190601f16801561047e5780820380516001836020036101000a031916815260200191505b50965050505050505060405180910390a1505050565b60006001905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166369d5f16b87336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b15801561054557600080fd5b505afa158015610559573d6000803e3d6000fd5b505050506040513d602081101561056f57600080fd5b81019080805190602001909291905050506105f2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260138152602001807f4e6f74206576656e74206f7267616e697365720000000000000000000000000081525060200191505060405180910390fd5b6105fa6107e6565b60405180606001604052808681526020018581526020018481525090508060016000898152602001908152602001600020876040518082805190602001908083835b6020831061065f578051825260208201915060208101905060208303925061063c565b6001836020036101000a03801982511681845116808217855250505050505090500191505090815260200160405180910390206000820151816000015560208201518160010155604082015181600201559050507fbc7ec4bdbbf1a751197585962914cfb777071a65d84cf411b203a2d4a4a7e6aa338888604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b8381101561074f578082015181840152602081019050610734565b50505050905090810190601f16801561077c5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a1600191505095945050505050565b600160205281600052604060002081805160208101820180518482526020830160208501208183528095505050505050600091509150508060000154908060010154908060020154905083565b6040518060600160405280600081526020016000815260200160008152509056fea265627a7a72315820cd116db3ff8ab8b01f9c4d3ea02b94853364ab2ae01a9a46b34a25252725f86564736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c806353c101ea146100515780637a2a152d146101165780639961b2d214610138578063fba628b914610233575b600080fd5b6101146004803603604081101561006757600080fd5b81019080803590602001909291908035906020019064010000000081111561008e57600080fd5b8201836020820111156100a057600080fd5b803590602001918460018302840111640100000000831117156100c257600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061031a565b005b61011e610494565b604051808215151515815260200191505060405180910390f35b610219600480360360a081101561014e57600080fd5b81019080803590602001909291908035906020019064010000000081111561017557600080fd5b82018360208201111561018757600080fd5b803590602001918460018302840111640100000000831117156101a957600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929080359060200190929190803590602001909291908035906020019092919050505061049d565b604051808215151515815260200191505060405180910390f35b6102f66004803603604081101561024957600080fd5b81019080803590602001909291908035906020019064010000000081111561027057600080fd5b82018360208201111561028257600080fd5b803590602001918460018302840111640100000000831117156102a457600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610799565b60405180848152602001838152602001828152602001935050505060405180910390f35b6103226107e6565b60016000848152602001908152602001600020826040518082805190602001908083835b602083106103695780518252602082019150602081019050602083039250610346565b6001836020036101000a0380198251168184511680821785525050505050509050019150509081526020016040518091039020604051806060016040529081600082015481526020016001820154815260200160028201548152505090507f82ee94439ccc772bfb3e2e62358e945882dd0e55cfa28522d33543ccf6b44f2f83838360000151846020015185604001516040518086815260200180602001858152602001848152602001838152602001828103825286818151815260200191508051906020019080838360005b83811015610451578082015181840152602081019050610436565b50505050905090810190601f16801561047e5780820380516001836020036101000a031916815260200191505b50965050505050505060405180910390a1505050565b60006001905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166369d5f16b87336040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b15801561054557600080fd5b505afa158015610559573d6000803e3d6000fd5b505050506040513d602081101561056f57600080fd5b81019080805190602001909291905050506105f2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260138152602001807f4e6f74206576656e74206f7267616e697365720000000000000000000000000081525060200191505060405180910390fd5b6105fa6107e6565b60405180606001604052808681526020018581526020018481525090508060016000898152602001908152602001600020876040518082805190602001908083835b6020831061065f578051825260208201915060208101905060208303925061063c565b6001836020036101000a03801982511681845116808217855250505050505090500191505090815260200160405180910390206000820151816000015560208201518160010155604082015181600201559050507fbc7ec4bdbbf1a751197585962914cfb777071a65d84cf411b203a2d4a4a7e6aa338888604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b8381101561074f578082015181840152602081019050610734565b50505050905090810190601f16801561077c5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a1600191505095945050505050565b600160205281600052604060002081805160208101820180518482526020830160208501208183528095505050505050600091509150508060000154908060010154908060020154905083565b6040518060600160405280600081526020016000815260200160008152509056fea265627a7a72315820cd116db3ff8ab8b01f9c4d3ea02b94853364ab2ae01a9a46b34a25252725f86564736f6c63430005100032",
+  "sourceMap": "48:2909:1:-;;;144:84;8:9:-1;5:2;;;30:1;27;20:12;5:2;144:84:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;144:84:1;;;;;;;;;;;;;;;;209:12;193:13;;:28;;;;;;;;;;;;;;;;;;144:84;48:2909;;;;;;",
+  "deployedSourceMap": "48:2909:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;48:2909:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2230:378;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2230:378:1;;;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;2230:378:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;2230:378:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;2230:378:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;2230:378:1;;;;;;;;;;;;;;;:::i;:::-;;2693:261;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;1389:778;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;1389:778:1;;;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;1389:778:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;1389:778:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;1389:778:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;1389:778:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;312:77;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;312:77:1;;;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;312:77:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;312:77:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;312:77:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;312:77:1;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2230:378;2312:41;;:::i;:::-;2356:14;:23;2371:7;2356:23;;;;;;;;;;;2380:8;2356:33;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;2356:33:1;;;;;;;;;;;;;;;;;;;;;2312:77;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2405:196;2434:7;2455:8;2478:17;:30;;;2523:17;:27;;;2565:17;:26;;;2405:196;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;2405:196:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2230:378;;;:::o;2693:261::-;2853:4;2877;2870:11;;2693:261;:::o;1389:778::-;1594:4;1671:13;;;;;;;;;;;:29;;;1701:7;1710:10;1671:50;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1671:50:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1671:50:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1671:50:1;;;;;;;;;;;;;;;;1663:82;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1803:37;;:::i;:::-;1843:112;;;;;;;;1873:17;1843:112;;;;1904:14;1843:112;;;;1932:13;1843:112;;;1803:152;;2035:13;1994:14;:23;2009:7;1994:23;;;;;;;;;;;2018:13;1994:38;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1994:38:1;;;;;;;;;;;;;;;;;;;;;:54;;;;;;;;;;;;;;;;;;;;;;;;;;;2086:52;2103:10;2115:7;2124:13;2086:52;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;2086:52:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2156:4;2149:11;;;1389:778;;;;;;;:::o;312:77::-;;;;;;;;;;;28:7:-1;22:14;169:4;160:7;156:18;147:7;143:32;204:13;198:20;246:8;231:13;224:31;316:4;307:7;303:18;296:4;287:7;283:18;273:49;350:9;335:13;328:32;378:4;366:16;;0:388;;;;312:77:1;;;;;;;;;;;;;;;;;;;;;;;;:::o;48:2909::-;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"./Event.sol\";\n\ncontract Ticket {\n\n    Event eventContract;\n\n    // Constructor that takes in event address\n    constructor(Event eventAddress) public {\n        eventContract = eventAddress;\n    }\n\n    // Mapping of event ID to mapping of Zone Name to uniqueZoneTicket struct\n    mapping(uint256 => mapping(string => uniqueZoneTicket)) public ticketMappings;\n\n    // Struct to store ticket zone information\n    struct uniqueZoneTicket {\n        // To do: Add more attributes to tickets\n        uint256 zoneCapacity; // Max number of tickets in zone\n        uint256 zonePrice; // Issue price for tickets in zone\n        // uint256 ticketExpiry; // Expiry date for tickets\n        uint256 priceCap; // Max price ceiling for tickets\n    }\n\n    // Events to be emitted\n    event ZoneDetailsAdded(address organiser, uint256 eventID, string zoneName);\n    event ZoneTicketCheck(\n        uint256 eventID, \n        string zoneName, \n        uint256 zoneCapacity, \n        uint256 zonePrice, \n        uint256 zonePriceCap\n    );\n    event ZoneCapacityDecreased(\n        uint256 eventID, \n        string zoneName, \n        uint256 zoneCapacityDecreased,\n        uint256 zoneCapacityAfter\n    );\n\n    /**\n     * @dev Function for event organisers to add zone details\n     * NOTE: If zone is already present, then input will overwrite existing zone details\n     */\n    function addZoneDetails(\n        uint256 eventID,\n        string memory zoneNameInput,\n        uint256 zoneCapacityInput,\n        uint256 zonePriceInput,\n        uint256 priceCapInput\n    ) public returns(bool) {\n\n        // Check that msg.sender is event organiser\n        require(eventContract.checkEventOwner(eventID, msg.sender), \"Not event organiser\");\n\n        // Create a new uniqueZoneTicketStruct\n        uniqueZoneTicket memory newZoneTicket = uniqueZoneTicket(\n            zoneCapacityInput,\n            zonePriceInput,\n            priceCapInput\n        );\n\n        // Add zone details\n        ticketMappings[eventID][zoneNameInput] = newZoneTicket;\n\n        // Emit event\n        emit ZoneDetailsAdded(msg.sender, eventID, zoneNameInput);\n\n        return true;\n    }\n\n    // Getter function to get zone details for all users\n    function getZoneDetails(uint256 eventID, string memory zoneName) public {\n        uniqueZoneTicket memory zoneTicketQueried = ticketMappings[eventID][zoneName];\n\n        emit ZoneTicketCheck(\n            eventID,\n            zoneName, \n            zoneTicketQueried.zoneCapacity, \n            zoneTicketQueried.zonePrice, \n            zoneTicketQueried.priceCap\n        );\n    }\n\n    // Function to decrease zoneCapacity as tickets are sold (TO BE WORKED ON)\n    function decreaseZoneCapacity(\n        // uint256 eventID,\n        // string memory zoneName,\n        // uint256 zoneCapacityDecrease\n    ) public pure returns(bool) {\n\n        return true;\n        // // Emit event\n        // emit ZoneCapacityDecreased();\n    }\n\n}",
+  "sourcePath": "/Users/alvintan/Documents/GitHub/AuthenTicket/contracts/Ticket.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Ticket.sol",
+    "exportedSymbols": {
+      "Ticket": [
+        230
+      ]
+    },
+    "id": 231,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 87,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "absolutePath": "project:/contracts/Event.sol",
+        "file": "./Event.sol",
+        "id": 88,
+        "nodeType": "ImportDirective",
+        "scope": 231,
+        "sourceUnit": 86,
+        "src": "25:21:1",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 230,
+        "linearizedBaseContracts": [
+          230
+        ],
+        "name": "Ticket",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 90,
+            "name": "eventContract",
+            "nodeType": "VariableDeclaration",
+            "scope": 230,
+            "src": "71:19:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_Event_$85",
+              "typeString": "contract Event"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 89,
+              "name": "Event",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 85,
+              "src": "71:5:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Event_$85",
+                "typeString": "contract Event"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 99,
+              "nodeType": "Block",
+              "src": "183:45:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 97,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 95,
+                      "name": "eventContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 90,
+                      "src": "193:13:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_Event_$85",
+                        "typeString": "contract Event"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 96,
+                      "name": "eventAddress",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 92,
+                      "src": "209:12:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_Event_$85",
+                        "typeString": "contract Event"
+                      }
+                    },
+                    "src": "193:28:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Event_$85",
+                      "typeString": "contract Event"
+                    }
+                  },
+                  "id": 98,
+                  "nodeType": "ExpressionStatement",
+                  "src": "193:28:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 100,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 93,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 92,
+                  "name": "eventAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 100,
+                  "src": "156:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_Event_$85",
+                    "typeString": "contract Event"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 91,
+                    "name": "Event",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 85,
+                    "src": "156:5:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_Event_$85",
+                      "typeString": "contract Event"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "155:20:1"
+            },
+            "returnParameters": {
+              "id": 94,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "183:0:1"
+            },
+            "scope": 230,
+            "src": "144:84:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 106,
+            "name": "ticketMappings",
+            "nodeType": "VariableDeclaration",
+            "scope": 230,
+            "src": "312:77:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$_$",
+              "typeString": "mapping(uint256 => mapping(string => struct Ticket.uniqueZoneTicket))"
+            },
+            "typeName": {
+              "id": 105,
+              "keyType": {
+                "id": 101,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "320:7:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "312:55:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$_$",
+                "typeString": "mapping(uint256 => mapping(string => struct Ticket.uniqueZoneTicket))"
+              },
+              "valueType": {
+                "id": 104,
+                "keyType": {
+                  "id": 102,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "339:6:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "nodeType": "Mapping",
+                "src": "331:35:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$",
+                  "typeString": "mapping(string => struct Ticket.uniqueZoneTicket)"
+                },
+                "valueType": {
+                  "contractScope": null,
+                  "id": 103,
+                  "name": "uniqueZoneTicket",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 113,
+                  "src": "349:16:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage_ptr",
+                    "typeString": "struct Ticket.uniqueZoneTicket"
+                  }
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "Ticket.uniqueZoneTicket",
+            "id": 113,
+            "members": [
+              {
+                "constant": false,
+                "id": 108,
+                "name": "zoneCapacity",
+                "nodeType": "VariableDeclaration",
+                "scope": 113,
+                "src": "526:20:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 107,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "526:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 110,
+                "name": "zonePrice",
+                "nodeType": "VariableDeclaration",
+                "scope": 113,
+                "src": "589:17:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 109,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "589:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 112,
+                "name": "priceCap",
+                "nodeType": "VariableDeclaration",
+                "scope": 113,
+                "src": "711:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 111,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "711:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "uniqueZoneTicket",
+            "nodeType": "StructDefinition",
+            "scope": 230,
+            "src": "443:324:1",
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 121,
+            "name": "ZoneDetailsAdded",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 120,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 115,
+                  "indexed": false,
+                  "name": "organiser",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "824:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 114,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "824:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 117,
+                  "indexed": false,
+                  "name": "eventID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "843:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 116,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "843:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 119,
+                  "indexed": false,
+                  "name": "zoneName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "860:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 118,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "860:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "823:53:1"
+            },
+            "src": "801:76:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 133,
+            "name": "ZoneTicketCheck",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 132,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 123,
+                  "indexed": false,
+                  "name": "eventID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "913:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 122,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "913:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 125,
+                  "indexed": false,
+                  "name": "zoneName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "939:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 124,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "939:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 127,
+                  "indexed": false,
+                  "name": "zoneCapacity",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "965:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 126,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "965:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 129,
+                  "indexed": false,
+                  "name": "zonePrice",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "996:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 128,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "996:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 131,
+                  "indexed": false,
+                  "name": "zonePriceCap",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "1024:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 130,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1024:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "903:147:1"
+            },
+            "src": "882:169:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 143,
+            "name": "ZoneCapacityDecreased",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 142,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 135,
+                  "indexed": false,
+                  "name": "eventID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 143,
+                  "src": "1093:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 134,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1093:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 137,
+                  "indexed": false,
+                  "name": "zoneName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 143,
+                  "src": "1119:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 136,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1119:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 139,
+                  "indexed": false,
+                  "name": "zoneCapacityDecreased",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 143,
+                  "src": "1145:29:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 138,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1145:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 141,
+                  "indexed": false,
+                  "name": "zoneCapacityAfter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 143,
+                  "src": "1184:25:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 140,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1184:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1083:132:1"
+            },
+            "src": "1056:160:1"
+          },
+          {
+            "body": {
+              "id": 193,
+              "nodeType": "Block",
+              "src": "1600:567:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 161,
+                            "name": "eventID",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 145,
+                            "src": "1701:7:1",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 162,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 245,
+                              "src": "1710:3:1",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 163,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1710:10:1",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 159,
+                            "name": "eventContract",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 90,
+                            "src": "1671:13:1",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_Event_$85",
+                              "typeString": "contract Event"
+                            }
+                          },
+                          "id": 160,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "checkEventOwner",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 76,
+                          "src": "1671:29:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
+                            "typeString": "function (uint256,address) view external returns (bool)"
+                          }
+                        },
+                        "id": 164,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1671:50:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4e6f74206576656e74206f7267616e69736572",
+                        "id": 165,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1723:21:1",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_d160e4588c1417b91a0bbddb192b5c51a4c3bcf2710fdd6b09486803cad3c7f0",
+                          "typeString": "literal_string \"Not event organiser\""
+                        },
+                        "value": "Not event organiser"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_d160e4588c1417b91a0bbddb192b5c51a4c3bcf2710fdd6b09486803cad3c7f0",
+                          "typeString": "literal_string \"Not event organiser\""
+                        }
+                      ],
+                      "id": 158,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        248,
+                        249
+                      ],
+                      "referencedDeclaration": 249,
+                      "src": "1663:7:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 166,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1663:82:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 167,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1663:82:1"
+                },
+                {
+                  "assignments": [
+                    169
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 169,
+                      "name": "newZoneTicket",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 193,
+                      "src": "1803:37:1",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                        "typeString": "struct Ticket.uniqueZoneTicket"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 168,
+                        "name": "uniqueZoneTicket",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 113,
+                        "src": "1803:16:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage_ptr",
+                          "typeString": "struct Ticket.uniqueZoneTicket"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 175,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 171,
+                        "name": "zoneCapacityInput",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 149,
+                        "src": "1873:17:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 172,
+                        "name": "zonePriceInput",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 151,
+                        "src": "1904:14:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 173,
+                        "name": "priceCapInput",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 153,
+                        "src": "1932:13:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 170,
+                      "name": "uniqueZoneTicket",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 113,
+                      "src": "1843:16:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_uniqueZoneTicket_$113_storage_ptr_$",
+                        "typeString": "type(struct Ticket.uniqueZoneTicket storage pointer)"
+                      }
+                    },
+                    "id": 174,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1843:112:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory",
+                      "typeString": "struct Ticket.uniqueZoneTicket memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1803:152:1"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 182,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 176,
+                          "name": "ticketMappings",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 106,
+                          "src": "1994:14:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$_$",
+                            "typeString": "mapping(uint256 => mapping(string memory => struct Ticket.uniqueZoneTicket storage ref))"
+                          }
+                        },
+                        "id": 179,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 177,
+                          "name": "eventID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 145,
+                          "src": "2009:7:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "1994:23:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$",
+                          "typeString": "mapping(string memory => struct Ticket.uniqueZoneTicket storage ref)"
+                        }
+                      },
+                      "id": 180,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "id": 178,
+                        "name": "zoneNameInput",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 147,
+                        "src": "2018:13:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1994:38:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage",
+                        "typeString": "struct Ticket.uniqueZoneTicket storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 181,
+                      "name": "newZoneTicket",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 169,
+                      "src": "2035:13:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                        "typeString": "struct Ticket.uniqueZoneTicket memory"
+                      }
+                    },
+                    "src": "1994:54:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage",
+                      "typeString": "struct Ticket.uniqueZoneTicket storage ref"
+                    }
+                  },
+                  "id": 183,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1994:54:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 185,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 245,
+                          "src": "2103:3:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 186,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "2103:10:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 187,
+                        "name": "eventID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 145,
+                        "src": "2115:7:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 188,
+                        "name": "zoneNameInput",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 147,
+                        "src": "2124:13:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      ],
+                      "id": 184,
+                      "name": "ZoneDetailsAdded",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 121,
+                      "src": "2086:16:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_uint256_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (address,uint256,string memory)"
+                      }
+                    },
+                    "id": 189,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2086:52:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 190,
+                  "nodeType": "EmitStatement",
+                  "src": "2081:57:1"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 191,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "2156:4:1",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 157,
+                  "id": 192,
+                  "nodeType": "Return",
+                  "src": "2149:11:1"
+                }
+              ]
+            },
+            "documentation": "@dev Function for event organisers to add zone details\nNOTE: If zone is already present, then input will overwrite existing zone details",
+            "id": 194,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addZoneDetails",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 154,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 145,
+                  "name": "eventID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1422:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 144,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1422:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 147,
+                  "name": "zoneNameInput",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1447:27:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 146,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1447:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 149,
+                  "name": "zoneCapacityInput",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1484:25:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 148,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1484:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 151,
+                  "name": "zonePriceInput",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1519:22:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 150,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1519:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 153,
+                  "name": "priceCapInput",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1551:21:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 152,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1551:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1412:166:1"
+            },
+            "returnParameters": {
+              "id": 157,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 156,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 194,
+                  "src": "1594:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 155,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1594:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1593:6:1"
+            },
+            "scope": 230,
+            "src": "1389:778:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 220,
+              "nodeType": "Block",
+              "src": "2302:306:1",
+              "statements": [
+                {
+                  "assignments": [
+                    202
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 202,
+                      "name": "zoneTicketQueried",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 220,
+                      "src": "2312:41:1",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                        "typeString": "struct Ticket.uniqueZoneTicket"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 201,
+                        "name": "uniqueZoneTicket",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 113,
+                        "src": "2312:16:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage_ptr",
+                          "typeString": "struct Ticket.uniqueZoneTicket"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 208,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 203,
+                        "name": "ticketMappings",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 106,
+                        "src": "2356:14:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$_$",
+                          "typeString": "mapping(uint256 => mapping(string memory => struct Ticket.uniqueZoneTicket storage ref))"
+                        }
+                      },
+                      "id": 205,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "id": 204,
+                        "name": "eventID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 196,
+                        "src": "2371:7:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "IndexAccess",
+                      "src": "2356:23:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_string_memory_$_t_struct$_uniqueZoneTicket_$113_storage_$",
+                        "typeString": "mapping(string memory => struct Ticket.uniqueZoneTicket storage ref)"
+                      }
+                    },
+                    "id": 207,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 206,
+                      "name": "zoneName",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 198,
+                      "src": "2380:8:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_string_memory_ptr",
+                        "typeString": "string memory"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "2356:33:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_storage",
+                      "typeString": "struct Ticket.uniqueZoneTicket storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "2312:77:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 210,
+                        "name": "eventID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 196,
+                        "src": "2434:7:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 211,
+                        "name": "zoneName",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 198,
+                        "src": "2455:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 212,
+                          "name": "zoneTicketQueried",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 202,
+                          "src": "2478:17:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                            "typeString": "struct Ticket.uniqueZoneTicket memory"
+                          }
+                        },
+                        "id": 213,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "zoneCapacity",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 108,
+                        "src": "2478:30:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 214,
+                          "name": "zoneTicketQueried",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 202,
+                          "src": "2523:17:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                            "typeString": "struct Ticket.uniqueZoneTicket memory"
+                          }
+                        },
+                        "id": 215,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "zonePrice",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 110,
+                        "src": "2523:27:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 216,
+                          "name": "zoneTicketQueried",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 202,
+                          "src": "2565:17:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_uniqueZoneTicket_$113_memory_ptr",
+                            "typeString": "struct Ticket.uniqueZoneTicket memory"
+                          }
+                        },
+                        "id": 217,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "priceCap",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 112,
+                        "src": "2565:26:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 209,
+                      "name": "ZoneTicketCheck",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 133,
+                      "src": "2405:15:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_string_memory_ptr_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,string memory,uint256,uint256,uint256)"
+                      }
+                    },
+                    "id": 218,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2405:196:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 219,
+                  "nodeType": "EmitStatement",
+                  "src": "2400:201:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 221,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getZoneDetails",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 199,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 196,
+                  "name": "eventID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "2254:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 195,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2254:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 198,
+                  "name": "zoneName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "2271:22:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 197,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2271:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2253:41:1"
+            },
+            "returnParameters": {
+              "id": 200,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2302:0:1"
+            },
+            "scope": 230,
+            "src": "2230:378:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 228,
+              "nodeType": "Block",
+              "src": "2859:95:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 226,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "2877:4:1",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 225,
+                  "id": 227,
+                  "nodeType": "Return",
+                  "src": "2870:11:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 229,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "decreaseZoneCapacity",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 222,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2722:110:1"
+            },
+            "returnParameters": {
+              "id": 225,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 224,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 229,
+                  "src": "2853:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 223,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2853:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2852:6:1"
+            },
+            "scope": 230,
+            "src": "2693:261:1",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 231,
+        "src": "48:2909:1"
+      }
+    ],
+    "src": "0:2957:1"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/Ticket.sol",
+      "exportedSymbols": {
+        "Ticket": [
+          230
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".0"
+          ]
+        },
+        "id": 87,
+        "name": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 86,
+          "absolutePath": "project:/contracts/Event.sol",
+          "file": "./Event.sol",
+          "scope": 231,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 88,
+        "name": "ImportDirective",
+        "src": "25:21:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            230
+          ],
+          "name": "Ticket",
+          "scope": 231
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "eventContract",
+              "scope": 230,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract Event",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "Event",
+                  "referencedDeclaration": 85,
+                  "type": "contract Event"
+                },
+                "id": 89,
+                "name": "UserDefinedTypeName",
+                "src": "71:5:1"
+              }
+            ],
+            "id": 90,
+            "name": "VariableDeclaration",
+            "src": "71:19:1"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": true,
+              "kind": "constructor",
+              "modifiers": [
+                null
+              ],
+              "name": "",
+              "scope": 230,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "eventAddress",
+                      "scope": 100,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract Event",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Event",
+                          "referencedDeclaration": 85,
+                          "type": "contract Event"
+                        },
+                        "id": 91,
+                        "name": "UserDefinedTypeName",
+                        "src": "156:5:1"
+                      }
+                    ],
+                    "id": 92,
+                    "name": "VariableDeclaration",
+                    "src": "156:18:1"
+                  }
+                ],
+                "id": 93,
+                "name": "ParameterList",
+                "src": "155:20:1"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 94,
+                "name": "ParameterList",
+                "src": "183:0:1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "contract Event"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 90,
+                              "type": "contract Event",
+                              "value": "eventContract"
+                            },
+                            "id": 95,
+                            "name": "Identifier",
+                            "src": "193:13:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 92,
+                              "type": "contract Event",
+                              "value": "eventAddress"
+                            },
+                            "id": 96,
+                            "name": "Identifier",
+                            "src": "209:12:1"
+                          }
+                        ],
+                        "id": 97,
+                        "name": "Assignment",
+                        "src": "193:28:1"
+                      }
+                    ],
+                    "id": 98,
+                    "name": "ExpressionStatement",
+                    "src": "193:28:1"
+                  }
+                ],
+                "id": 99,
+                "name": "Block",
+                "src": "183:45:1"
+              }
+            ],
+            "id": 100,
+            "name": "FunctionDefinition",
+            "src": "144:84:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "ticketMappings",
+              "scope": 230,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "mapping(uint256 => mapping(string => struct Ticket.uniqueZoneTicket))",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "type": "mapping(uint256 => mapping(string => struct Ticket.uniqueZoneTicket))"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 101,
+                    "name": "ElementaryTypeName",
+                    "src": "320:7:1"
+                  },
+                  {
+                    "attributes": {
+                      "type": "mapping(string => struct Ticket.uniqueZoneTicket)"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 102,
+                        "name": "ElementaryTypeName",
+                        "src": "339:6:1"
+                      },
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "uniqueZoneTicket",
+                          "referencedDeclaration": 113,
+                          "type": "struct Ticket.uniqueZoneTicket"
+                        },
+                        "id": 103,
+                        "name": "UserDefinedTypeName",
+                        "src": "349:16:1"
+                      }
+                    ],
+                    "id": 104,
+                    "name": "Mapping",
+                    "src": "331:35:1"
+                  }
+                ],
+                "id": 105,
+                "name": "Mapping",
+                "src": "312:55:1"
+              }
+            ],
+            "id": 106,
+            "name": "VariableDeclaration",
+            "src": "312:77:1"
+          },
+          {
+            "attributes": {
+              "canonicalName": "Ticket.uniqueZoneTicket",
+              "name": "uniqueZoneTicket",
+              "scope": 230,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "zoneCapacity",
+                  "scope": 113,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 107,
+                    "name": "ElementaryTypeName",
+                    "src": "526:7:1"
+                  }
+                ],
+                "id": 108,
+                "name": "VariableDeclaration",
+                "src": "526:20:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "zonePrice",
+                  "scope": 113,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 109,
+                    "name": "ElementaryTypeName",
+                    "src": "589:7:1"
+                  }
+                ],
+                "id": 110,
+                "name": "VariableDeclaration",
+                "src": "589:17:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "priceCap",
+                  "scope": 113,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 111,
+                    "name": "ElementaryTypeName",
+                    "src": "711:7:1"
+                  }
+                ],
+                "id": 112,
+                "name": "VariableDeclaration",
+                "src": "711:16:1"
+              }
+            ],
+            "id": 113,
+            "name": "StructDefinition",
+            "src": "443:324:1"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "ZoneDetailsAdded"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "organiser",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 114,
+                        "name": "ElementaryTypeName",
+                        "src": "824:7:1"
+                      }
+                    ],
+                    "id": 115,
+                    "name": "VariableDeclaration",
+                    "src": "824:17:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "eventID",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 116,
+                        "name": "ElementaryTypeName",
+                        "src": "843:7:1"
+                      }
+                    ],
+                    "id": 117,
+                    "name": "VariableDeclaration",
+                    "src": "843:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneName",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 118,
+                        "name": "ElementaryTypeName",
+                        "src": "860:6:1"
+                      }
+                    ],
+                    "id": 119,
+                    "name": "VariableDeclaration",
+                    "src": "860:15:1"
+                  }
+                ],
+                "id": 120,
+                "name": "ParameterList",
+                "src": "823:53:1"
+              }
+            ],
+            "id": 121,
+            "name": "EventDefinition",
+            "src": "801:76:1"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "ZoneTicketCheck"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "eventID",
+                      "scope": 133,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 122,
+                        "name": "ElementaryTypeName",
+                        "src": "913:7:1"
+                      }
+                    ],
+                    "id": 123,
+                    "name": "VariableDeclaration",
+                    "src": "913:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneName",
+                      "scope": 133,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 124,
+                        "name": "ElementaryTypeName",
+                        "src": "939:6:1"
+                      }
+                    ],
+                    "id": 125,
+                    "name": "VariableDeclaration",
+                    "src": "939:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneCapacity",
+                      "scope": 133,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 126,
+                        "name": "ElementaryTypeName",
+                        "src": "965:7:1"
+                      }
+                    ],
+                    "id": 127,
+                    "name": "VariableDeclaration",
+                    "src": "965:20:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zonePrice",
+                      "scope": 133,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 128,
+                        "name": "ElementaryTypeName",
+                        "src": "996:7:1"
+                      }
+                    ],
+                    "id": 129,
+                    "name": "VariableDeclaration",
+                    "src": "996:17:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zonePriceCap",
+                      "scope": 133,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 130,
+                        "name": "ElementaryTypeName",
+                        "src": "1024:7:1"
+                      }
+                    ],
+                    "id": 131,
+                    "name": "VariableDeclaration",
+                    "src": "1024:20:1"
+                  }
+                ],
+                "id": 132,
+                "name": "ParameterList",
+                "src": "903:147:1"
+              }
+            ],
+            "id": 133,
+            "name": "EventDefinition",
+            "src": "882:169:1"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "ZoneCapacityDecreased"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "eventID",
+                      "scope": 143,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 134,
+                        "name": "ElementaryTypeName",
+                        "src": "1093:7:1"
+                      }
+                    ],
+                    "id": 135,
+                    "name": "VariableDeclaration",
+                    "src": "1093:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneName",
+                      "scope": 143,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 136,
+                        "name": "ElementaryTypeName",
+                        "src": "1119:6:1"
+                      }
+                    ],
+                    "id": 137,
+                    "name": "VariableDeclaration",
+                    "src": "1119:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneCapacityDecreased",
+                      "scope": 143,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 138,
+                        "name": "ElementaryTypeName",
+                        "src": "1145:7:1"
+                      }
+                    ],
+                    "id": 139,
+                    "name": "VariableDeclaration",
+                    "src": "1145:29:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "zoneCapacityAfter",
+                      "scope": 143,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 140,
+                        "name": "ElementaryTypeName",
+                        "src": "1184:7:1"
+                      }
+                    ],
+                    "id": 141,
+                    "name": "VariableDeclaration",
+                    "src": "1184:25:1"
+                  }
+                ],
+                "id": 142,
+                "name": "ParameterList",
+                "src": "1083:132:1"
+              }
+            ],
+            "id": 143,
+            "name": "EventDefinition",
+            "src": "1056:160:1"
+          },
+          {
+            "attributes": {
+              "documentation": "@dev Function for event organisers to add zone details\nNOTE: If zone is already present, then input will overwrite existing zone details",
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "addZoneDetails",
+              "scope": 230,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "eventID",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 144,
+                        "name": "ElementaryTypeName",
+                        "src": "1422:7:1"
+                      }
+                    ],
+                    "id": 145,
+                    "name": "VariableDeclaration",
+                    "src": "1422:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "zoneNameInput",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 146,
+                        "name": "ElementaryTypeName",
+                        "src": "1447:6:1"
+                      }
+                    ],
+                    "id": 147,
+                    "name": "VariableDeclaration",
+                    "src": "1447:27:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "zoneCapacityInput",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 148,
+                        "name": "ElementaryTypeName",
+                        "src": "1484:7:1"
+                      }
+                    ],
+                    "id": 149,
+                    "name": "VariableDeclaration",
+                    "src": "1484:25:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "zonePriceInput",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 150,
+                        "name": "ElementaryTypeName",
+                        "src": "1519:7:1"
+                      }
+                    ],
+                    "id": 151,
+                    "name": "VariableDeclaration",
+                    "src": "1519:22:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "priceCapInput",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 152,
+                        "name": "ElementaryTypeName",
+                        "src": "1551:7:1"
+                      }
+                    ],
+                    "id": 153,
+                    "name": "VariableDeclaration",
+                    "src": "1551:21:1"
+                  }
+                ],
+                "id": 154,
+                "name": "ParameterList",
+                "src": "1412:166:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 194,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 155,
+                        "name": "ElementaryTypeName",
+                        "src": "1594:4:1"
+                      }
+                    ],
+                    "id": 156,
+                    "name": "VariableDeclaration",
+                    "src": "1594:4:1"
+                  }
+                ],
+                "id": 157,
+                "name": "ParameterList",
+                "src": "1593:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_d160e4588c1417b91a0bbddb192b5c51a4c3bcf2710fdd6b09486803cad3c7f0",
+                                  "typeString": "literal_string \"Not event organiser\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                248,
+                                249
+                              ],
+                              "referencedDeclaration": 249,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 158,
+                            "name": "Identifier",
+                            "src": "1663:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_address_payable",
+                                      "typeString": "address payable"
+                                    }
+                                  ],
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "checkEventOwner",
+                                  "referencedDeclaration": 76,
+                                  "type": "function (uint256,address) view external returns (bool)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 90,
+                                      "type": "contract Event",
+                                      "value": "eventContract"
+                                    },
+                                    "id": 159,
+                                    "name": "Identifier",
+                                    "src": "1671:13:1"
+                                  }
+                                ],
+                                "id": 160,
+                                "name": "MemberAccess",
+                                "src": "1671:29:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 145,
+                                  "type": "uint256",
+                                  "value": "eventID"
+                                },
+                                "id": 161,
+                                "name": "Identifier",
+                                "src": "1701:7:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "sender",
+                                  "referencedDeclaration": null,
+                                  "type": "address payable"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 245,
+                                      "type": "msg",
+                                      "value": "msg"
+                                    },
+                                    "id": 162,
+                                    "name": "Identifier",
+                                    "src": "1710:3:1"
+                                  }
+                                ],
+                                "id": 163,
+                                "name": "MemberAccess",
+                                "src": "1710:10:1"
+                              }
+                            ],
+                            "id": 164,
+                            "name": "FunctionCall",
+                            "src": "1671:50:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "4e6f74206576656e74206f7267616e69736572",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"Not event organiser\"",
+                              "value": "Not event organiser"
+                            },
+                            "id": 165,
+                            "name": "Literal",
+                            "src": "1723:21:1"
+                          }
+                        ],
+                        "id": 166,
+                        "name": "FunctionCall",
+                        "src": "1663:82:1"
+                      }
+                    ],
+                    "id": 167,
+                    "name": "ExpressionStatement",
+                    "src": "1663:82:1"
+                  },
+                  {
+                    "attributes": {
+                      "assignments": [
+                        169
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "newZoneTicket",
+                          "scope": 193,
+                          "stateVariable": false,
+                          "storageLocation": "memory",
+                          "type": "struct Ticket.uniqueZoneTicket",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "contractScope": null,
+                              "name": "uniqueZoneTicket",
+                              "referencedDeclaration": 113,
+                              "type": "struct Ticket.uniqueZoneTicket"
+                            },
+                            "id": 168,
+                            "name": "UserDefinedTypeName",
+                            "src": "1803:16:1"
+                          }
+                        ],
+                        "id": 169,
+                        "name": "VariableDeclaration",
+                        "src": "1803:37:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": true,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "struct Ticket.uniqueZoneTicket memory",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 113,
+                              "type": "type(struct Ticket.uniqueZoneTicket storage pointer)",
+                              "value": "uniqueZoneTicket"
+                            },
+                            "id": 170,
+                            "name": "Identifier",
+                            "src": "1843:16:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 149,
+                              "type": "uint256",
+                              "value": "zoneCapacityInput"
+                            },
+                            "id": 171,
+                            "name": "Identifier",
+                            "src": "1873:17:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 151,
+                              "type": "uint256",
+                              "value": "zonePriceInput"
+                            },
+                            "id": 172,
+                            "name": "Identifier",
+                            "src": "1904:14:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 153,
+                              "type": "uint256",
+                              "value": "priceCapInput"
+                            },
+                            "id": 173,
+                            "name": "Identifier",
+                            "src": "1932:13:1"
+                          }
+                        ],
+                        "id": 174,
+                        "name": "FunctionCall",
+                        "src": "1843:112:1"
+                      }
+                    ],
+                    "id": 175,
+                    "name": "VariableDeclarationStatement",
+                    "src": "1803:152:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "struct Ticket.uniqueZoneTicket storage ref"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "type": "struct Ticket.uniqueZoneTicket storage ref"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "type": "mapping(string memory => struct Ticket.uniqueZoneTicket storage ref)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 106,
+                                      "type": "mapping(uint256 => mapping(string memory => struct Ticket.uniqueZoneTicket storage ref))",
+                                      "value": "ticketMappings"
+                                    },
+                                    "id": 176,
+                                    "name": "Identifier",
+                                    "src": "1994:14:1"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 145,
+                                      "type": "uint256",
+                                      "value": "eventID"
+                                    },
+                                    "id": 177,
+                                    "name": "Identifier",
+                                    "src": "2009:7:1"
+                                  }
+                                ],
+                                "id": 179,
+                                "name": "IndexAccess",
+                                "src": "1994:23:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 147,
+                                  "type": "string memory",
+                                  "value": "zoneNameInput"
+                                },
+                                "id": 178,
+                                "name": "Identifier",
+                                "src": "2018:13:1"
+                              }
+                            ],
+                            "id": 180,
+                            "name": "IndexAccess",
+                            "src": "1994:38:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 169,
+                              "type": "struct Ticket.uniqueZoneTicket memory",
+                              "value": "newZoneTicket"
+                            },
+                            "id": 181,
+                            "name": "Identifier",
+                            "src": "2035:13:1"
+                          }
+                        ],
+                        "id": 182,
+                        "name": "Assignment",
+                        "src": "1994:54:1"
+                      }
+                    ],
+                    "id": 183,
+                    "name": "ExpressionStatement",
+                    "src": "1994:54:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 121,
+                              "type": "function (address,uint256,string memory)",
+                              "value": "ZoneDetailsAdded"
+                            },
+                            "id": 184,
+                            "name": "Identifier",
+                            "src": "2086:16:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "sender",
+                              "referencedDeclaration": null,
+                              "type": "address payable"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 245,
+                                  "type": "msg",
+                                  "value": "msg"
+                                },
+                                "id": 185,
+                                "name": "Identifier",
+                                "src": "2103:3:1"
+                              }
+                            ],
+                            "id": 186,
+                            "name": "MemberAccess",
+                            "src": "2103:10:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 145,
+                              "type": "uint256",
+                              "value": "eventID"
+                            },
+                            "id": 187,
+                            "name": "Identifier",
+                            "src": "2115:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 147,
+                              "type": "string memory",
+                              "value": "zoneNameInput"
+                            },
+                            "id": 188,
+                            "name": "Identifier",
+                            "src": "2124:13:1"
+                          }
+                        ],
+                        "id": 189,
+                        "name": "FunctionCall",
+                        "src": "2086:52:1"
+                      }
+                    ],
+                    "id": 190,
+                    "name": "EmitStatement",
+                    "src": "2081:57:1"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 157
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "hexvalue": "74727565",
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "subdenomination": null,
+                          "token": "bool",
+                          "type": "bool",
+                          "value": "true"
+                        },
+                        "id": 191,
+                        "name": "Literal",
+                        "src": "2156:4:1"
+                      }
+                    ],
+                    "id": 192,
+                    "name": "Return",
+                    "src": "2149:11:1"
+                  }
+                ],
+                "id": 193,
+                "name": "Block",
+                "src": "1600:567:1"
+              }
+            ],
+            "id": 194,
+            "name": "FunctionDefinition",
+            "src": "1389:778:1"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getZoneDetails",
+              "scope": 230,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "eventID",
+                      "scope": 221,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 195,
+                        "name": "ElementaryTypeName",
+                        "src": "2254:7:1"
+                      }
+                    ],
+                    "id": 196,
+                    "name": "VariableDeclaration",
+                    "src": "2254:15:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "zoneName",
+                      "scope": 221,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 197,
+                        "name": "ElementaryTypeName",
+                        "src": "2271:6:1"
+                      }
+                    ],
+                    "id": 198,
+                    "name": "VariableDeclaration",
+                    "src": "2271:22:1"
+                  }
+                ],
+                "id": 199,
+                "name": "ParameterList",
+                "src": "2253:41:1"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 200,
+                "name": "ParameterList",
+                "src": "2302:0:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "assignments": [
+                        202
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "zoneTicketQueried",
+                          "scope": 220,
+                          "stateVariable": false,
+                          "storageLocation": "memory",
+                          "type": "struct Ticket.uniqueZoneTicket",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "contractScope": null,
+                              "name": "uniqueZoneTicket",
+                              "referencedDeclaration": 113,
+                              "type": "struct Ticket.uniqueZoneTicket"
+                            },
+                            "id": 201,
+                            "name": "UserDefinedTypeName",
+                            "src": "2312:16:1"
+                          }
+                        ],
+                        "id": 202,
+                        "name": "VariableDeclaration",
+                        "src": "2312:41:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "type": "struct Ticket.uniqueZoneTicket storage ref"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "type": "mapping(string memory => struct Ticket.uniqueZoneTicket storage ref)"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 106,
+                                  "type": "mapping(uint256 => mapping(string memory => struct Ticket.uniqueZoneTicket storage ref))",
+                                  "value": "ticketMappings"
+                                },
+                                "id": 203,
+                                "name": "Identifier",
+                                "src": "2356:14:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 196,
+                                  "type": "uint256",
+                                  "value": "eventID"
+                                },
+                                "id": 204,
+                                "name": "Identifier",
+                                "src": "2371:7:1"
+                              }
+                            ],
+                            "id": 205,
+                            "name": "IndexAccess",
+                            "src": "2356:23:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 198,
+                              "type": "string memory",
+                              "value": "zoneName"
+                            },
+                            "id": 206,
+                            "name": "Identifier",
+                            "src": "2380:8:1"
+                          }
+                        ],
+                        "id": 207,
+                        "name": "IndexAccess",
+                        "src": "2356:33:1"
+                      }
+                    ],
+                    "id": 208,
+                    "name": "VariableDeclarationStatement",
+                    "src": "2312:77:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_string_memory_ptr",
+                                  "typeString": "string memory"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 133,
+                              "type": "function (uint256,string memory,uint256,uint256,uint256)",
+                              "value": "ZoneTicketCheck"
+                            },
+                            "id": 209,
+                            "name": "Identifier",
+                            "src": "2405:15:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 196,
+                              "type": "uint256",
+                              "value": "eventID"
+                            },
+                            "id": 210,
+                            "name": "Identifier",
+                            "src": "2434:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 198,
+                              "type": "string memory",
+                              "value": "zoneName"
+                            },
+                            "id": 211,
+                            "name": "Identifier",
+                            "src": "2455:8:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "zoneCapacity",
+                              "referencedDeclaration": 108,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 202,
+                                  "type": "struct Ticket.uniqueZoneTicket memory",
+                                  "value": "zoneTicketQueried"
+                                },
+                                "id": 212,
+                                "name": "Identifier",
+                                "src": "2478:17:1"
+                              }
+                            ],
+                            "id": 213,
+                            "name": "MemberAccess",
+                            "src": "2478:30:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "zonePrice",
+                              "referencedDeclaration": 110,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 202,
+                                  "type": "struct Ticket.uniqueZoneTicket memory",
+                                  "value": "zoneTicketQueried"
+                                },
+                                "id": 214,
+                                "name": "Identifier",
+                                "src": "2523:17:1"
+                              }
+                            ],
+                            "id": 215,
+                            "name": "MemberAccess",
+                            "src": "2523:27:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "priceCap",
+                              "referencedDeclaration": 112,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 202,
+                                  "type": "struct Ticket.uniqueZoneTicket memory",
+                                  "value": "zoneTicketQueried"
+                                },
+                                "id": 216,
+                                "name": "Identifier",
+                                "src": "2565:17:1"
+                              }
+                            ],
+                            "id": 217,
+                            "name": "MemberAccess",
+                            "src": "2565:26:1"
+                          }
+                        ],
+                        "id": 218,
+                        "name": "FunctionCall",
+                        "src": "2405:196:1"
+                      }
+                    ],
+                    "id": 219,
+                    "name": "EmitStatement",
+                    "src": "2400:201:1"
+                  }
+                ],
+                "id": 220,
+                "name": "Block",
+                "src": "2302:306:1"
+              }
+            ],
+            "id": 221,
+            "name": "FunctionDefinition",
+            "src": "2230:378:1"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "decreaseZoneCapacity",
+              "scope": 230,
+              "stateMutability": "pure",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 222,
+                "name": "ParameterList",
+                "src": "2722:110:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 229,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 223,
+                        "name": "ElementaryTypeName",
+                        "src": "2853:4:1"
+                      }
+                    ],
+                    "id": 224,
+                    "name": "VariableDeclaration",
+                    "src": "2853:4:1"
+                  }
+                ],
+                "id": 225,
+                "name": "ParameterList",
+                "src": "2852:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 225
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "hexvalue": "74727565",
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "subdenomination": null,
+                          "token": "bool",
+                          "type": "bool",
+                          "value": "true"
+                        },
+                        "id": 226,
+                        "name": "Literal",
+                        "src": "2877:4:1"
+                      }
+                    ],
+                    "id": 227,
+                    "name": "Return",
+                    "src": "2870:11:1"
+                  }
+                ],
+                "id": 228,
+                "name": "Block",
+                "src": "2859:95:1"
+              }
+            ],
+            "id": 229,
+            "name": "FunctionDefinition",
+            "src": "2693:261:1"
+          }
+        ],
+        "id": 230,
+        "name": "ContractDefinition",
+        "src": "48:2909:1"
+      }
+    ],
+    "id": 231,
+    "name": "SourceUnit",
+    "src": "0:2957:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.11",
+  "updatedAt": "2023-02-24T20:15:15.430Z",
+  "devdoc": {
+    "methods": {
+      "addZoneDetails(uint256,string,uint256,uint256,uint256)": {
+        "details": "Function for event organisers to add zone details NOTE: If zone is already present, then input will overwrite existing zone details"
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
