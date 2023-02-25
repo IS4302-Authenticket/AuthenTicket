@@ -10,6 +10,7 @@ var assert = require("assert");
 const oneEth = new BigNumber(1000000000000000000); // 1 eth
 
 // create variables to represent contracts
+var User = artifacts.require("../contracts/User.sol");
 var Event = artifacts.require("../contracts/Event.sol");
 var Ticket = artifacts.require("../contracts/Ticket.sol");
 
@@ -18,19 +19,72 @@ contract ('Authenticket', function(accounts){
 
     // waits for 2 contracts to be deployed before testing can occur
     before( async() => {
+        userInstance = await User.deployed();
         eventInstance = await Event.deployed();
         ticketInstance = await Ticket.deployed();
     });
 
     console.log("Testing Authenticket application");
 
-    // Test case 1: Create eventa
+    // Test: Test that after deploying contract, deployer is master of user contract
+    it('Test User contract master', async() =>{
+
+        let masterTest = await userInstance.checkAdmin(
+            accounts[0],
+            {from: accounts[0]}
+        );
+        assert(masterTest == true, 'Test that deployer is User contract master failed');
+    });
+
+    // Test: Test User contract setAdmin
+    it('Test User contract setAdmin', async() =>{
+
+        let setAdmin = await userInstance.setAdmin(
+            accounts[1],
+            {from: accounts[0]}
+        );
+        let checkAdmin = await userInstance.checkAdmin(
+            accounts[1],
+            {from: accounts[0]}
+        );
+        assert(checkAdmin == true, 'Test User contract setAdmin failed');
+    });
+
+    // Test: Test User contract setOrganiser
+    it('Test User contract setOrganiser', async() =>{
+
+        let setOrganiser = await userInstance.setOrganiser(
+            accounts[2],
+            {from: accounts[1]}
+        );
+        let checkOrganiser = await userInstance.checkOrganiser(
+            accounts[2],
+            {from: accounts[1]}
+        );
+        assert(checkOrganiser == true, 'Test User contract setAdmin failed');
+    });
+
+    // Test: Test User contract checkOrganiser
+    it('Test User contract setOrganiser', async() =>{
+
+        let setOrganiser2 = await userInstance.setOrganiser(
+            accounts[3],
+            {from: accounts[1]}
+        );
+        let checkOrganiser2 = await userInstance.checkOrganiser(
+            accounts[3],
+            {from: accounts[1]}
+        );
+        assert(checkOrganiser2 == true, 'Test User contract setOrganiser failed');
+    });
+
+    // Test: Create events
     it('Create first 2 events', async() =>{
 
         // Let account 1 create an Event
         let makeEvent1 = await eventInstance.createEvent(
             'JayChou', 100,
-            {from: accounts[1]}
+            {from: accounts[2]}
         );
 
         truffleAssert.eventEmitted(makeEvent1, "EventCreated");
@@ -38,25 +92,25 @@ contract ('Authenticket', function(accounts){
         // Let account 2 create an Event
         let makeEvent2 = await eventInstance.createEvent(
             'JJLin', 200,
-            {from: accounts[2]}
+            {from: accounts[3]}
         );
         truffleAssert.eventEmitted(makeEvent2, "EventCreated");
 
     });
 
-    // Test case 2: Check that events are created with correct event owners
+    // Test: Check that events are created with correct event owners
     it('Check event owners', async() =>{
 
         // Assertions
-        let checkResults1 = await eventInstance.checkEventOwner.call(1, accounts[1]);
+        let checkResults1 = await eventInstance.checkEventOwner.call(1, accounts[2]);
         await assert(checkResults1 == true, 'Event 1 not created')
 
-        let checkResults2 = await eventInstance.checkEventOwner.call(2, accounts[2]);
+        let checkResults2 = await eventInstance.checkEventOwner.call(2, accounts[3]);
         await assert(checkResults2 == true, 'Event 2 not created')
 
     });
 
-    // Test case 3: Check that zone details cannot be added if sender is not event organiser
+    // Test: Check that zone details cannot be added if sender is not event organiser
     it('Check that zone details cannot be added if sender is not event organiser', async() =>{
 
         // Assertions
@@ -68,14 +122,14 @@ contract ('Authenticket', function(accounts){
                 20,
                 10,
                 100,
-                {from: accounts[2]}
+                {from: accounts[3]}
             ),
             'VM Exception while processing transaction: revert Not event organiser'
         );
 
     });
 
-    // Test case 4: Add zone details twice for event 1
+    // Test: Add zone details twice for event 1
     it('Add zone details twice for event 1', async() =>{
 
         // Add zone details from account 1
@@ -85,7 +139,7 @@ contract ('Authenticket', function(accounts){
             20,
             10,
             100,
-            {from: accounts[1]}
+            {from: accounts[2]}
         );
 
         let addZoneDetails1B = await ticketInstance.addZoneDetails(
@@ -94,7 +148,7 @@ contract ('Authenticket', function(accounts){
             30,
             20,
             200,
-            {from: accounts[1]}
+            {from: accounts[2]}
         );
 
         // Assertions
@@ -112,6 +166,5 @@ contract ('Authenticket', function(accounts){
         await assert(getZoneBPrice == 20, 'Event 1 zone B price wrong');
         await assert(getZoneBPriceCap == 200, 'Event 1 zone B price cap wrong');
     });
-
 
 })

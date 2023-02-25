@@ -1,7 +1,12 @@
 pragma solidity ^0.5.0;
 
+import "./User.sol";
+
 contract Event {
     
+    // Instantiate user contract here to ensure that only organisers can create events
+    User userContractInstance;
+
     // All events are issued with an event ID, in ascending order starting from 1
     uint256 eventIdCount = 1;
 
@@ -15,12 +20,17 @@ contract Event {
         uint256 eventMaxCapacity;
     }
 
+    // Constructor
+    constructor (User userContractAddress) public {
+        userContractInstance = userContractAddress;
+    }
+
     // Events
     event EventCreated(address organiser, uint256 eventID);
 
     // Modifier to ensure function is called by authorised organisers
     modifier OrganisersOnly() {
-        // To work on it after Users contract completed
+        require(userContractInstance.checkOrganiser(msg.sender) == true);
         _;
     }
 

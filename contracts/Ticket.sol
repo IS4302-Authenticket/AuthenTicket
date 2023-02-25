@@ -1,13 +1,16 @@
 pragma solidity ^0.5.0;
 
+import "./User.sol";
 import "./Event.sol";
 
 contract Ticket {
 
+    User userContract;
     Event eventContract;
 
     // Constructor that takes in event address
-    constructor(Event eventAddress) public {
+    constructor(User userAddress, Event eventAddress) public {
+        userContract = userAddress;
         eventContract = eventAddress;
     }
 
