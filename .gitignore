@@ -1,0 +1,20 @@
+# Directories
+node_modules/
+build/
+coverage/
+
+# Files
+.env
+.env.local
+.env.*.local
+*.log
+*.pid
+*.seed
+*.pid.lock
+*.secret
+*.swp
+*.swo
+*.tgz
+*.zip
+.DS_Store
+Thumbs.db
