@@ -48,7 +48,7 @@ contract TicketFactory {
     }
 
     modifier validTicketCategory(uint256 id) {
-        require(ticketCategories[id].eventID != 0, "Ticket category does not exist");
+        require(ticketCategories[id].eventID > 0, "Ticket category does not exist");
         _;
     }
 

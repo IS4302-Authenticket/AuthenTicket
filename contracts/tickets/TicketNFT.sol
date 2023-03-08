@@ -39,7 +39,7 @@ contract TicketNFT {
             false,
             owner
         );
-
+        //obtain unique hash value to use as key
         uint256 ticketTokenID = uint256(keccak256(abi.encodePacked(eventID, ticketCategoryID, owner, block.timestamp)));
         tickets[ticketTokenID] = newTicket;
         ticketFactory.ticketSold(ticketCategoryID);
