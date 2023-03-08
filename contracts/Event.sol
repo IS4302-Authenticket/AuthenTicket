@@ -15,6 +15,7 @@ contract Event {
         uint256 eventID;
         string eventName;
         uint256 eventMaxCapacity;
+        uint256 numCategories; //when creating event i think you should alr know what categories to have 
     }
 
     constructor (User userContractAddress) public {
@@ -30,9 +31,15 @@ contract Event {
         _;
     }
 
-    function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public {
+    // Function to return num categories of an event
+    function getTicketCategories(uint256 eventId) public view returns(uint256){
+        return eventIdMappings[eventId].numCategories;
+    }
+
+    //added event category 
+    function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput, uint8 numCategories) organisersOnly public {
         uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
-        uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput);
+        uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput, numCategories);
         eventIdMappings[eventID] = newEvent;
         emit EventCreated(msg.sender, eventID);
     }
