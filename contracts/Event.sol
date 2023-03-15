@@ -41,4 +41,10 @@ contract Event {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
         return (eventQueried.eventOrganiser == organiserAddress);
     }
+    
+    // Getters
+    function getEventName(uint256 eventID) public view returns(string memory) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventName; 
+    } 
 }

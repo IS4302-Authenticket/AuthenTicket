@@ -61,4 +61,8 @@ contract TicketFactory {
         ticketCategories[categoryId].remaining -= 1;
     }
 
+    function ticketRefund(uint256 categoryId) validTicketCategory(categoryId) public {
+        ticketCategories[categoryId].remaining += 1;
+    }
+
 }
