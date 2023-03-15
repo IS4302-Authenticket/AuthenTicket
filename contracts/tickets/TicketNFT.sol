@@ -22,6 +22,20 @@ contract TicketNFT {
         uint256 ticketCategoryID;
         bool isUsed;
         address owner;
+        // added variable
+        address prevOwner; 
+    }
+
+    // NEWWW!!!! modifier for valid ticket
+    modifier validTicketId(uint256 ticketId){
+        require(tickets[ticketId].owner != address(0) , "Ticket ID not valid!");
+        _;
+    }
+
+    // NEW!!!!! modifier for owner only
+    modifier ownerOnly(uint ticketId){
+        require(tickets[ticketId].owner == msg.sender, "Wrong Owner!");
+        _;
     }
 
     // track ticket tokens
@@ -37,7 +51,9 @@ contract TicketNFT {
             eventID,
             ticketCategoryID,
             false,
-            owner
+            owner,
+             // new variable
+            address(0)
         );
         //validify ticket categories 
         require(ticketCategoryID > 0, "ticketCategoryID must be more than 0");
@@ -58,6 +74,33 @@ contract TicketNFT {
         require(msg.value == ticketPrice, "Incorrect amount sent");
         require(remaining > 0, "No tickets remaining");
         mintTicket(eventID, ticketCategoryID, msg.sender);
+    }
+
+    // NEWWW!!!! transfer function
+    function transferOwnership(uint ticketId,address newOwner) public ownerOnly(ticketId) validTicketId(ticketId){
+        tickets[ticketId].prevOwner = tickets[ticketId].owner;
+        tickets[ticketId].owner = newOwner;
+    }
+
+    // NEW!!!!!! getter functions
+    function getTicketEvent(uint256 ticketId) public view validTicketId(ticketId) returns(uint256){
+        return tickets[ticketId].eventID;
+    }
+
+    function getTicketCategory(uint256 ticketId) public view validTicketId(ticketId) returns (uint256){
+        return tickets[ticketId].ticketCategoryID;
+    }
+
+    function getTicketStatus(uint ticketId) public view validTicketId(ticketId) returns (bool){
+        return tickets[ticketId].isUsed;
+    }
+
+    function getTicketOwner(uint ticketId) public view validTicketId(ticketId) returns (address){
+        return tickets[ticketId].owner;
+    }
+
+    function getPrevOwner(uint ticketId) public view validTicketId(ticketId) returns (address){
+        return tickets[ticketId].prevOwner;
     }
 
 }
