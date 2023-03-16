@@ -27,8 +27,8 @@ contract Market {
 
     // Modifier to ensure function only callable by ticket owner (which should be an organiser) 
     modifier ownerOnly(uint256 ticketId) {
-        // address prevOwnerAddress = ticketContract.getPrevOwner(ticketId);
-        // require(prevOwnerAddress == msg.sender, "Sender is not ticket owner");
+        address prevOwnerAddress = ticketContract.getPrevOwner(ticketId);
+        require(prevOwnerAddress == msg.sender, "Sender is not ticket owner");
         require(userContract.checkOrganiser(msg.sender) == true, "Owner is not an organizer");
         _;
     }
@@ -41,7 +41,7 @@ contract Market {
     }
 
     // Modifier to ensure event is listed before listing tickets
-    modifier listedEvent(uint256 ticketId, uint256 eventId) {
+    modifier listedEvent(uint256 ticketId) {
         uint256 eventId = ticketContract.getTicketEvent(ticketId);
         require(bytes(listEventName[eventId]).length != 0, "Event is not listed");
         _;
@@ -61,6 +61,9 @@ contract Market {
 
     // event to buy ticket successfully
     event ticketBought(uint ticketId);
+
+    // event to refund ticket successfully
+    event ticketRefunded(uint ticketId);
 
 
     // Listing and unlisting event
@@ -88,8 +91,8 @@ contract Market {
 
 
     // Buy tickets
-    function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
-        (, , uint256 ticketPrice, , uint256 remaining, uint256 priceCap, bool isResellable) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+    function buyTickets(uint256 eventId, uint256 ticketCategoryId/*, uint256 numTickets*/) public payable {
+        // (, , uint256 ticketPrice, , uint256 remaining, uint256 priceCap, bool isResellable) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId);
         
         require(listPrice[ticketId] != 0, "Ticket is not listed");
@@ -103,7 +106,7 @@ contract Market {
 
         address payable recipient = address(uint160(ticketContract.getPrevOwner(ticketId)));
         recipient.transfer(msg.value);
-        // ticketContract.transferOwnership(ticketId, msg.sender);
+        ticketContract.transferOwnership(ticketId, msg.sender);
         unlistTicket(ticketId);
         emit ticketBought(ticketId);
     }
@@ -111,9 +114,13 @@ contract Market {
 
     // Refund tickets
     function refundTickets(uint256 ticketId) public payable {
+        address payable recipient = address(uint160(ticketContract.getPrevOwner(ticketId)));
+        recipient.transfer(msg.value);
+        ticketContract.transferOwnership(ticketId, address(this));
         listTicket(ticketId);
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
         ticketFactoryContract.ticketRefund(ticketCategoryId);
+        emit ticketRefunded(ticketId);
     }
 
 
