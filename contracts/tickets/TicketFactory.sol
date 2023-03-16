@@ -1,12 +1,15 @@
 pragma solidity ^0.5.0;
 
-contract TicketFactory {
-    address userContractAddress;
-    address eventContractAddress;
+import "../User.sol";
+import "../Event.sol";
 
-    constructor(address userAddress, address eventAddress) public {
-        userContractAddress = userAddress;
-        eventContractAddress = eventAddress;
+contract TicketFactory {
+    User userContractInstance;
+    Event eventContractInstance;
+
+    constructor(User userAddress, Event eventAddress) public {
+        userContractInstance = userAddress;
+        eventContractInstance = eventAddress;
     }
 
     struct TicketCategory {
@@ -30,6 +33,8 @@ contract TicketFactory {
         uint256 priceCap,
         bool isResellable
     ) public returns (uint256) {
+
+        // Create TicketCategory
         TicketCategory memory newTicketCategory = TicketCategory(
             eventID,
             categoryName,
@@ -40,9 +45,17 @@ contract TicketFactory {
             isResellable
         );
 
+        // Check if adding ticket supply from this category will exceed event maxCapacity
+        uint256 currCapacityOccupied = eventContractInstance.getEventCapacityOccupied(eventID);
+        uint256 maxCapacityOccupied = eventContractInstance.getEventMaxCapacity(eventID);
+        require((currCapacityOccupied + totalSupply) <= maxCapacityOccupied, 'Cannot create ticket category: total supply > max supply');
+        
         //uint256 ticketCategoryID = uint256(keccak256(abi.encodePacked(eventID, categoryName, ticketPrice, priceCap, isResellable)));
         ticketCategories[ticketCategoryID] = newTicketCategory;
         ticketCategoryID++;
+
+        // Update event capacity occupied from event contract
+        eventContractInstance.updateEventCapacityOccupied(eventID, totalSupply);
 
         return ticketCategoryID;
     }

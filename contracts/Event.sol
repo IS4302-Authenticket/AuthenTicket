@@ -15,6 +15,7 @@ contract Event {
         uint256 eventID;
         string eventName;
         uint256 eventMaxCapacity;
+        uint256 eventCapacityOccupied;
     }
 
     constructor (User userContractAddress) public {
@@ -23,6 +24,7 @@ contract Event {
 
     // Events
     event EventCreated(address organiser, uint256 eventID);
+    event EventCapacityOccupiedUpdated(uint256 eventID, uint256 eventCapacityAdded, uint256 eventNewCapacity);
 
     // Modifier to ensure function is called by authorised organisers
     modifier organisersOnly() {
@@ -32,7 +34,7 @@ contract Event {
 
     function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public {
         uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
-        uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput);
+        uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput, 0);
         eventIdMappings[eventID] = newEvent;
         emit EventCreated(msg.sender, eventID);
     }
@@ -46,5 +48,31 @@ contract Event {
     function getEventName(uint256 eventID) public view returns(string memory) {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
         return eventQueried.eventName; 
-    } 
+    }
+
+    function getEventCapacityOccupied(uint256 eventID) public view returns(uint256) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventCapacityOccupied; 
+    }
+
+    function getEventMaxCapacity(uint256 eventID) public view returns(uint256) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventMaxCapacity; 
+    }
+    
+    // Setter to update EventCapacityOccupied
+    function updateEventCapacityOccupied(uint256 eventID, uint256 capacityIncreased) organisersOnly public {
+
+        // Check that adding event capacity wont exceed maxCapacity
+        uint256 currentEventCapacityOccupied = eventIdMappings[eventID].eventCapacityOccupied;
+        uint256 newEventCapacityOccupied = currentEventCapacityOccupied + capacityIncreased;
+        require(newEventCapacityOccupied <= eventIdMappings[eventID].eventMaxCapacity, "Cannot update event capacity (new capacity > max capacity)");
+
+        // Update mapping for event
+        eventIdMappings[eventID].eventCapacityOccupied = newEventCapacityOccupied;
+
+        // Emit event
+        emit EventCapacityOccupiedUpdated(eventID, capacityIncreased, newEventCapacityOccupied);
+    }
+
 }
