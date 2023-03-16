@@ -20,6 +20,7 @@ contract TicketFactory {
         uint256 remaining;
         uint256 priceCap;
         bool isResellable;
+        uint256 maxTixPerUser;
     }
 
     mapping(uint256 => TicketCategory) public ticketCategories;
@@ -31,7 +32,8 @@ contract TicketFactory {
         uint256 ticketPrice,
         uint256 totalSupply,
         uint256 priceCap,
-        bool isResellable
+        bool isResellable,
+        uint256 maxTixPerUser
     ) public returns (uint256) {
 
         // Create TicketCategory
@@ -42,7 +44,8 @@ contract TicketFactory {
             totalSupply,
             totalSupply,
             priceCap,
-            isResellable
+            isResellable,
+            maxTixPerUser
         );
 
         // Check if adding ticket supply from this category will exceed event maxCapacity
@@ -65,9 +68,27 @@ contract TicketFactory {
         _;
     }
 
-    function getTicketCategory(uint256 id) validTicketCategory(id) public view returns (uint256, string memory, uint256, uint256, uint256, uint256, bool) {
+    function getTicketCategory(uint256 id) validTicketCategory(id) public view returns (
+        uint256, 
+        string memory, 
+        uint256, 
+        uint256, 
+        uint256, 
+        uint256, 
+        bool,
+        uint256)
+    {
         TicketCategory memory ticketCategory = ticketCategories[id];
-        return (ticketCategory.eventID, ticketCategory.categoryName, ticketCategory.ticketPrice, ticketCategory.totalSupply, ticketCategory.remaining, ticketCategory.priceCap, ticketCategory.isResellable);
+        return (
+            ticketCategory.eventID, 
+            ticketCategory.categoryName, 
+            ticketCategory.ticketPrice, 
+            ticketCategory.totalSupply, 
+            ticketCategory.remaining, 
+            ticketCategory.priceCap, 
+            ticketCategory.isResellable,
+            ticketCategory.maxTixPerUser
+        );
     }
 
     function ticketSold(uint256 categoryId) validTicketCategory(categoryId) public {

@@ -15,6 +15,19 @@ contract TicketNFT {
         ticketFactory = ticketFactoryAddress;
     }
 
+    // Mapping of Categories -> User -> Number of tickets
+    mapping(uint256 => mapping(address => uint256)) mappingCategoryUserTixNum;
+    // track ticket tokens
+    mapping(uint256 => Ticket) public tickets;
+
+    // Emit event when tickets are sold
+    event TicketPurchased(
+        uint256 eventID,
+        uint256 ticketCategoryID,
+        address ticketOwner,
+        uint256 ticketsPurchased
+    );
+
     // Ticket Token Metadata
     // TODO: confirm attributes
     struct Ticket {
@@ -38,9 +51,6 @@ contract TicketNFT {
         _;
     }
 
-    // track ticket tokens
-    mapping(uint256 => Ticket) public tickets;
-
     // create a new TicketNFT
     function mintTicket(
         uint256 eventID,
@@ -55,25 +65,41 @@ contract TicketNFT {
              // new variable
             address(0)
         );
-        //validify ticket categories 
+
+        // validate ticket categories 
         require(ticketCategoryID > 0, "ticketCategoryID must be more than 0");
         
         //obtain unique hash value to use as key
         uint256 ticketTokenID = uint256(keccak256(abi.encodePacked(eventID, ticketCategoryID, owner, block.timestamp)));
         tickets[ticketTokenID] = newTicket;
         //ticketFactory.ticketSold(ticketCategoryID);
+
+        // Update mapping of tickets that user has purchased
+        mappingCategoryUserTixNum[ticketCategoryID][owner] += 1;
+
         return ticketTokenID;
     }
 
-    // purchase ticket token
+    // Purchase ticket token
     function purchaseTicket(
         uint256 eventID,
-        uint256 ticketCategoryID
+        uint256 ticketCategoryID,
+        uint256 numTicketsPurchased
     ) public payable returns (uint256) {
-        (, , uint256 ticketPrice, , uint256 remaining, ,) = ticketFactory.getTicketCategory(ticketCategoryID);
+        (, , uint256 ticketPrice, , uint256 remaining, , ,uint256 maxTixPerUser) = ticketFactory.getTicketCategory(ticketCategoryID);
+
+        // Checks before issuing tickets
+        require(mappingCategoryUserTixNum[ticketCategoryID][msg.sender] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
         require(msg.value == ticketPrice, "Incorrect amount sent");
         require(remaining > 0, "No tickets remaining");
-        mintTicket(eventID, ticketCategoryID, msg.sender);
+
+        // Issue tickets
+        for (uint256 i = 0 ; i < numTicketsPurchased; i++) {
+            mintTicket(eventID, ticketCategoryID, msg.sender);
+        }
+        
+        // Emit event for successful ticket purchase
+        emit TicketPurchased(eventID, ticketCategoryID, msg.sender, numTicketsPurchased);
     }
 
     // NEWWW!!!! transfer function
