@@ -91,20 +91,20 @@ contract Market {
 
 
     // Buy tickets
-    function buyTickets(uint256 eventId, uint256 ticketCategoryId/*, uint256 numTickets*/) public payable {
-        // (, , uint256 ticketPrice, , uint256 remaining, uint256 priceCap, bool isResellable) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+    function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
+        (, , uint256 ticketPrice, , uint256 remaining, , ) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId);
         
         require(listPrice[ticketId] != 0, "Ticket is not listed");
-        // require(msg.value == ticketPrice * numTickets, "Invalid amount sent");
-        // require(remaining >= numTickets, "Not enough tickets available");
+        require(msg.value == ticketPrice * numTickets, "Invalid amount sent");
+        require(remaining >= numTickets, "Not enough tickets available");
 
         // Update remaining tickets
-        // for (int i = 0; i < numTickets; i++) {
-        //     ticketFactoryContract.ticketSold(ticketCategoryId); 
-        // }
+        for (int i = 0; i < int(numTickets); i++) {
+            ticketFactoryContract.ticketSold(ticketCategoryId); 
+        }
 
-        address payable recipient = address(uint160(ticketContract.getPrevOwner(ticketId)));
+        address payable recipient = address(uint160(ticketContract.getTicketOwner(ticketId)));  
         recipient.transfer(msg.value);
         ticketContract.transferOwnership(ticketId, msg.sender);
         unlistTicket(ticketId);
