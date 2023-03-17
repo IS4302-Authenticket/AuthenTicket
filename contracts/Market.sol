@@ -79,7 +79,7 @@ contract Market {
     // List and unlisting ticket
     function listTicket(uint256 ticketId) ownerOnly(ticketId) listedEvent(ticketId) public {
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
-        (, , uint256 ticketPrice, , , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+        (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         listPrice[ticketId] = ticketPrice;
         emit ticketListed(ticketId);
     }
@@ -92,8 +92,8 @@ contract Market {
 
     // Buy tickets
     function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
-        (, , uint256 ticketPrice, , uint256 remaining, , ) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
-        uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId);
+        (, , uint256 ticketPrice, , uint256 remaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+        uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);
         
         require(listPrice[ticketId] != 0, "Ticket is not listed");
         require(msg.value == ticketPrice * numTickets, "Invalid amount sent");

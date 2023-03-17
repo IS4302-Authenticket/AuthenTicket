@@ -24,7 +24,7 @@ contract ResellMarket{
     modifier ticketResellable(uint256 ticketId){
         require(ticketNFT.getTicketStatus(ticketId) == false, "Ticket is already used. Cannot be listed");
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
-        (,,,,,,bool isTicketResellable) = ticketFactory.getTicketCategory(ticketCategoryId);
+        (,,,,,,bool isTicketResellable,) = ticketFactory.getTicketCategory(ticketCategoryId);
         require(isTicketResellable == true, "Ticket category is not resellable, ticket cannot be listed");
         _;
     }
@@ -40,7 +40,7 @@ contract ResellMarket{
     // modifier to ensure price listed do not exceed max price
     modifier priceExceed(uint256 ticketId, uint256 price){
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
-        (,,,,,uint256 ticketPriceCap,) = ticketFactory.getTicketCategory(ticketCategoryId);
+        (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
         require( price <= ticketPriceCap, "Price listing is over price cap!");
         _;
     }
