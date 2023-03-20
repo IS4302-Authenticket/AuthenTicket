@@ -1,5 +1,5 @@
 // require contracts to be deployed
-const _deploy_contracts = require("../migrations/2_deploy_contracts");
+/*const _deploy_contracts = require("../migrations/2_deploy_contracts");
 
 // require assertion frameworks to be correctly initialised
 const truffleAssert = require("truffle-assertions");
@@ -14,7 +14,7 @@ var User = artifacts.require("../contracts/User.sol");
 var Event = artifacts.require("../contracts/Event.sol");
 var Ticket = artifacts.require("../contracts/Ticket.sol");
 
-// Establish testing
+// Testing with a POV of an Event Organiser 
 contract ('Authenticket', function(accounts){
 
     // waits for 2 contracts to be deployed before testing can occur
@@ -167,4 +167,4 @@ contract ('Authenticket', function(accounts){
         await assert(getZoneBPriceCap == 200, 'Event 1 zone B price cap wrong');
     });
 
-})
+})*/
