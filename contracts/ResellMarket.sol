@@ -62,6 +62,7 @@ contract ResellMarket{
 
     // function to list ticket
     function list(uint256 ticketId, uint256 price) public ownerOnly(ticketId) ticketResellable(ticketId) priceExceed(ticketId, price){
+        ticketNFT.transferOwnership(ticketId, address(this));
         listedTickets[ticketId] = price;
         emit ticketListed(ticketId);
     }
