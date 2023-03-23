@@ -48,31 +48,33 @@ contract Market {
     }
 
     // event to list event successfully
-    event eventListed(uint256 eventId);
+    event EventListed(uint256 eventId);
 
     // event to unlist event successfully
-    event eventUnlisted(uint256 eventId);
+    event EventUnlisted(uint256 eventId);
 
     // event to list ticket successfully
-    event ticketListed(uint256 ticketId);
+    event TicketListed(uint256 ticketId);
 
     // event to unlist ticket successfully
-    event ticketUnlisted(uint256 ticketId);
+    event TicketUnlisted(uint256 ticketId);
 
     // event to buy ticket successfully
-    event ticketBought(uint ticketId);
+    event TicketBought(uint ticketId);
 
     // event to refund ticket successfully
-    event ticketRefunded(uint ticketId);
+    event TicketRefunded(uint ticketId);
 
 
     // Listing and unlisting event
     function listEvent(uint256 eventId) eventOwnerOnly(eventId) public {
         listEventName[eventId] = eventContract.getEventName(eventId);
+        emit EventListed(eventId);
     }
 
     function unlistEvent(uint256 eventId) eventOwnerOnly(eventId) public {
         listEventName[eventId] = "";
+        emit EventUnlisted(eventId);
     }
 
 
@@ -81,12 +83,12 @@ contract Market {
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
         (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         listPrice[ticketId] = ticketPrice;
-        emit ticketListed(ticketId);
+        emit TicketListed(ticketId);
     }
 
     function unlistTicket(uint256 ticketId) ownerOnly(ticketId) public {
        listPrice[ticketId] = 0;
-       emit ticketUnlisted(ticketId);
+       emit TicketUnlisted(ticketId);
     }
 
 
@@ -108,7 +110,7 @@ contract Market {
         recipient.transfer(msg.value);
         ticketContract.transferOwnership(ticketId, msg.sender);
         unlistTicket(ticketId);
-        emit ticketBought(ticketId);
+        emit TicketBought(ticketId);
     }
 
 
@@ -120,7 +122,7 @@ contract Market {
         listTicket(ticketId);
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
         ticketFactoryContract.ticketRefund(ticketCategoryId);
-        emit ticketRefunded(ticketId);
+        emit TicketRefunded(ticketId);
     }
 
 

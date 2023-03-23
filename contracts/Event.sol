@@ -32,11 +32,12 @@ contract Event {
         _;
     }
 
-    function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public {
+    function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public returns(uint256) {
         uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
         uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput, 0);
         eventIdMappings[eventID] = newEvent;
         emit EventCreated(msg.sender, eventID);
+        return eventID;
     }
 
     function checkEventOwner(uint256 eventID, address organiserAddress) public view returns(bool) {

@@ -12,7 +12,7 @@ const oneEth = new BigNumber(1000000000000000000); // 1 eth
 // create variables to represent contracts
 var User = artifacts.require("../contracts/User.sol");
 var Event = artifacts.require("../contracts/Event.sol");
-var Ticket = artifacts.require("../contracts/Ticket.sol");
+var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
 
 // Testing with a POV of an Admin 
 contract ('Authenticket', function(accounts){
@@ -21,7 +21,7 @@ contract ('Authenticket', function(accounts){
     before( async() => {
         userInstance = await User.deployed();
         eventInstance = await Event.deployed();
-        ticketInstance = await Ticket.deployed();
+        ticketInstance = await TicketNFT.deployed();
     });
 
     function isRejected(promise) {

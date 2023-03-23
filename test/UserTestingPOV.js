@@ -1,5 +1,5 @@
 // require contracts to be deployed
-/*const _deploy_contracts = require("../migrations/2_deploy_contracts");
+const _deploy_contracts = require("../migrations/2_deploy_contracts");
 
 // require assertion frameworks to be correctly initialised
 const truffleAssert = require("truffle-assertions");
@@ -12,7 +12,7 @@ const oneEth = new BigNumber(1000000000000000000); // 1 eth
 // create variables to represent contracts
 var User = artifacts.require("../contracts/User.sol");
 var Event = artifacts.require("../contracts/Event.sol");
-var Ticket = artifacts.require("../contracts/Ticket.sol");
+var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
 
 // Testing with a POV of an Event Organiser 
 contract ('Authenticket', function(accounts){
@@ -21,7 +21,7 @@ contract ('Authenticket', function(accounts){
     before( async() => {
         userInstance = await User.deployed();
         eventInstance = await Event.deployed();
-        ticketInstance = await Ticket.deployed();
+        ticketInstance = await TicketNFT.deployed();
     });
 
     console.log("Testing Authenticket application");
@@ -110,61 +110,6 @@ contract ('Authenticket', function(accounts){
 
     });
 
-    // Test: Check that zone details cannot be added if sender is not event organiser
-    it('Check that zone details cannot be added if sender is not event organiser', async() =>{
+   
 
-        // Assertions
-        await truffleAssert.fails(
-            // Add zone details for event 1 from account 2
-            ticketInstance.addZoneDetails(
-                1,
-                'A',
-                20,
-                10,
-                100,
-                {from: accounts[3]}
-            ),
-            'VM Exception while processing transaction: revert Not event organiser'
-        );
-
-    });
-
-    // Test: Add zone details twice for event 1
-    it('Add zone details twice for event 1', async() =>{
-
-        // Add zone details from account 1
-        let addZoneDetails1A = await ticketInstance.addZoneDetails(
-            1,
-            'A',
-            20,
-            10,
-            100,
-            {from: accounts[2]}
-        );
-
-        let addZoneDetails1B = await ticketInstance.addZoneDetails(
-            1,
-            'B',
-            30,
-            20,
-            200,
-            {from: accounts[2]}
-        );
-
-        // Assertions
-        let getZoneACapacity = await ticketInstance.getZoneCapacity(1, 'A');
-        let getZoneAPrice = await ticketInstance.getZonePrice(1, 'A');
-        let getZoneAPriceCap = await ticketInstance.getZonePriceCap(1, 'A');
-        await assert(getZoneACapacity == 20, 'Event 1 zone A capacity wrong');
-        await assert(getZoneAPrice == 10, 'Event 1 zone A price wrong');
-        await assert(getZoneAPriceCap == 100, 'Event 1 zone A price cap wrong');
-        
-        let getZoneBCapacity = await ticketInstance.getZoneCapacity(1, 'B');
-        let getZoneBPrice = await ticketInstance.getZonePrice(1, 'B');
-        let getZoneBPriceCap = await ticketInstance.getZonePriceCap(1, 'B');
-        await assert(getZoneBCapacity == 30, 'Event 1 zone B capacity wrong');
-        await assert(getZoneBPrice == 20, 'Event 1 zone B price wrong');
-        await assert(getZoneBPriceCap == 200, 'Event 1 zone B price cap wrong');
-    });
-
-})*/
+})
