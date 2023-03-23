@@ -92,17 +92,8 @@ contract Market {
 
     // Buy tickets
     function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
-        (, , uint256 ticketPrice, , uint256 remaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);
-        
         require(listPrice[ticketId] != 0, "Ticket is not listed");
-        require(msg.value == ticketPrice * numTickets, "Invalid amount sent");
-        require(remaining >= numTickets, "Not enough tickets available");
-
-        // Update remaining tickets
-        for (int i = 0; i < int(numTickets); i++) {
-            ticketFactoryContract.ticketSold(ticketCategoryId); 
-        }
 
         address payable recipient = address(uint160(ticketContract.getTicketOwner(ticketId)));  
         recipient.transfer(msg.value);

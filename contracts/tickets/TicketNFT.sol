@@ -72,7 +72,7 @@ contract TicketNFT {
         //obtain unique hash value to use as key
         uint256 ticketTokenID = uint256(keccak256(abi.encodePacked(eventID, ticketCategoryID, owner, block.timestamp)));
         tickets[ticketTokenID] = newTicket;
-        //ticketFactory.ticketSold(ticketCategoryID);
+        ticketFactory.ticketSold(ticketCategoryID);
 
         // Update mapping of tickets that user has purchased
         mappingCategoryUserTixNum[ticketCategoryID][owner] += 1;
@@ -90,8 +90,8 @@ contract TicketNFT {
 
         // Checks before issuing tickets
         require(mappingCategoryUserTixNum[ticketCategoryID][msg.sender] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
-        require(msg.value == ticketPrice, "Incorrect amount sent");
-        require(remaining > 0, "No tickets remaining");
+        require(msg.value == ticketPrice * numTicketsPurchased, "Incorrect amount sent");
+        require(remaining > numTicketsPurchased, "No tickets remaining");
 
         // Issue tickets
         for (uint256 i = 0 ; i < numTicketsPurchased; i++) {
