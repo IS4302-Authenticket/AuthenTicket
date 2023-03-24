@@ -58,6 +58,26 @@ contract ('Authenticket', function(accounts){
         truffleAssert.eventEmitted(listEvent2, "EventListed");
     });
 
+    // Test: Check that ticket can be bought
+    it('Check that ticket can be bought', async() =>{
+        createTicketCategory(
+            uint256 eventID,
+            string memory categoryName,
+            uint256 ticketPrice,
+            uint256 totalSupply,
+            uint256 priceCap,
+            bool isResellable,
+            uint256 maxTixPerUser
+        )
+
+        // Unlist events
+        let unlistEvent1 = await marketInstance.unlistEvent(makeEvent1);
+        truffleAssert.eventEmitted(unlistEvent1, "EventUnlisted");
+
+        let unlistEvent2 = await marketInstance.unlistEvent(makeEvent2);
+        truffleAssert.eventEmitted(unlistEvent2, "EventUnlisted");
+    });
+
     // Test: Check that event can be unlisted
     it('Check event can be unlisted', async() =>{
 
@@ -70,7 +90,6 @@ contract ('Authenticket', function(accounts){
     });
 
     
-
 
     // Test: Check that event can only be listed/unlisted by organiser (test modifier if got time?)
 

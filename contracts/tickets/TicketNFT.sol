@@ -90,8 +90,8 @@ contract TicketNFT {
 
         // Checks before issuing tickets
         require(mappingCategoryUserTixNum[ticketCategoryID][msg.sender] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
-        require(msg.value == ticketPrice, "Incorrect amount sent");
-        require(remaining > 0, "No tickets remaining");
+        require(msg.value == ticketPrice * numTicketsPurchased, "Incorrect amount sent");
+        require(remaining >= numTicketsPurchased, "Not enough tickets remaining");
 
         // Issue tickets
         for (uint256 i = 0 ; i < numTicketsPurchased; i++) {

@@ -25,13 +25,13 @@ contract Market {
         eventContract = newEvent;
     }
 
-    // Modifier to ensure function only callable by ticket owner (which should be an organiser) 
-    modifier ownerOnly(uint256 ticketId) {
-        address prevOwnerAddress = ticketContract.getPrevOwner(ticketId);
-        require(prevOwnerAddress == msg.sender, "Sender is not ticket owner");
-        require(userContract.checkOrganiser(msg.sender) == true, "Owner is not an organizer");
-        _;
-    }
+    // // Modifier to ensure function only callable by ticket owner (which should be an organiser) 
+    // modifier ownerOnly(uint256 ticketId) {
+    //     address prevOwnerAddress = ticketContract.getPrevOwner(ticketId);
+    //     require(prevOwnerAddress == msg.sender, "Sender is not ticket owner");
+    //     require(userContract.checkOrganiser(msg.sender) == true, "Owner is not an organizer");
+    //     _;
+    // }
 
     // Modifier to ensure function only callable by event owner (which should be an organiser) 
     modifier eventOwnerOnly(uint256 eventId) {
@@ -41,8 +41,7 @@ contract Market {
     }
 
     // Modifier to ensure event is listed before listing tickets
-    modifier listedEvent(uint256 ticketId) {
-        uint256 eventId = ticketContract.getTicketEvent(ticketId);
+    modifier listedEvent(uint256 eventId) {
         require(bytes(listEventName[eventId]).length != 0, "Event is not listed");
         _;
     }
@@ -54,10 +53,10 @@ contract Market {
     event EventUnlisted(uint256 eventId);
 
     // event to list ticket successfully
-    event TicketListed(uint256 ticketId);
+    event TicketListed(uint256 ticketCategoryId);
 
     // event to unlist ticket successfully
-    event TicketUnlisted(uint256 ticketId);
+    event TicketUnlisted(uint256 ticketCategoryId);
 
     // event to buy ticket successfully
     event TicketBought(uint ticketId);
@@ -79,27 +78,29 @@ contract Market {
 
 
     // List and unlisting ticket
-    function listTicket(uint256 ticketId) ownerOnly(ticketId) listedEvent(ticketId) public {
-        uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
+    // function listTicket(uint256 ticketId) ownerOnly(ticketId) listedEvent(ticketId) public {
+    //     uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
+    //     (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+    //     listPrice[ticketId] = ticketPrice;
+    //     emit TicketListed(ticketId);
+    // }
+
+    function listTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) listedEvent(eventId) public {
         (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
-        listPrice[ticketId] = ticketPrice;
-        emit TicketListed(ticketId);
+        listPrice[ticketCategoryId] = ticketPrice;
+        emit TicketListed(ticketCategoryId);
     }
 
-    function unlistTicket(uint256 ticketId) ownerOnly(ticketId) public {
-       listPrice[ticketId] = 0;
-       emit TicketUnlisted(ticketId);
+    function unlistTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) public {
+       listPrice[ticketCategoryId] = 0;
+       emit TicketUnlisted(ticketCategoryId);
     }
 
 
     // Buy tickets
     function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
-        (, , uint256 ticketPrice, , uint256 remaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
-        uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);
-        
-        require(listPrice[ticketId] != 0, "Ticket is not listed");
-        require(msg.value == ticketPrice * numTickets, "Invalid amount sent");
-        require(remaining >= numTickets, "Not enough tickets available");
+        require(listPrice[ticketCategoryId] != 0, "Ticket is not listed");
+        uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);        
 
         // Update remaining tickets
         for (int i = 0; i < int(numTickets); i++) {
@@ -109,7 +110,13 @@ contract Market {
         address payable recipient = address(uint160(ticketContract.getTicketOwner(ticketId)));  
         recipient.transfer(msg.value);
         ticketContract.transferOwnership(ticketId, msg.sender);
-        unlistTicket(ticketId);
+
+        // Unlist tickets for a category if a catgory is sold out
+        (, , , , uint256 newRemaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+        if (newRemaining == 0) {
+            unlistTicket(eventId, ticketCategoryId);
+        }
+
         emit TicketBought(ticketId);
     }
 
@@ -119,17 +126,18 @@ contract Market {
         address payable recipient = address(uint160(ticketContract.getPrevOwner(ticketId)));
         recipient.transfer(msg.value);
         ticketContract.transferOwnership(ticketId, address(this));
-        listTicket(ticketId);
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
+        uint256 eventId = ticketContract.getTicketEvent(ticketId);
         ticketFactoryContract.ticketRefund(ticketCategoryId);
+        listTicket(eventId, ticketCategoryId);
         emit TicketRefunded(ticketId);
     }
 
 
     // Check price of ticket
-    function checkPrice(uint256 ticketId) public view returns (uint256) {
-        require(listPrice[ticketId] != 0, "Ticket is not listed");
-        return listPrice[ticketId];
+    function checkPrice(uint256 ticketCategoryId) public view returns (uint256) {
+        require(listPrice[ticketCategoryId] != 0, "Ticket is not listed");
+        return listPrice[ticketCategoryId];
     }
 
 }
