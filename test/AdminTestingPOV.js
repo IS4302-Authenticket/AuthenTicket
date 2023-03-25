@@ -15,7 +15,7 @@ var Event = artifacts.require("../contracts/Event.sol");
 var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
 
 // Testing with a POV of an Admin 
-contract ('Authenticket', function(accounts){
+contract ('Authenticket - Admin Testing POV', function(accounts){
 
     // waits for 2 contracts to be deployed before testing can occur
     before( async() => {

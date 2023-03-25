@@ -17,7 +17,7 @@ var TicketFactory = artifacts.require("../contracts/TicketFactory.sol");
 var Market = artifacts.require("../contracts/Market.sol");
 
 // Testing with a POV of an Event Organiser 
-contract ('Authenticket', function(accounts){
+contract ('Authenticket - Event Organiser Testing POV', function(accounts){
 
     // waits for 2 contracts to be deployed before testing can occur
     before( async() => {

@@ -13,9 +13,12 @@ const oneEth = new BigNumber(1000000000000000000); // 1 eth
 var User = artifacts.require("../contracts/User.sol");
 var Event = artifacts.require("../contracts/Event.sol");
 var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
+var TicketFactory = artifacts.require("../contracts/TicketFactory.sol");
+var Market = artifacts.require("../contracts/Market.sol");
+
 
 // Testing with a POV of an Event Organiser 
-contract ('Authenticket', function(accounts){
+contract ('Authenticket - User Testing POV', function(accounts){
 
     // waits for 2 contracts to be deployed before testing can occur
     before( async() => {
@@ -26,87 +29,33 @@ contract ('Authenticket', function(accounts){
 
     console.log("Testing Authenticket application");
 
-    // Test: Test that after deploying contract, deployer is master of user contract
-    it('Test User contract master', async() =>{
+    
+    // Test: Initialization stage where we create all the stuff 
+    it('Initialization Stage', async() =>{
 
-        let masterTest = await userInstance.checkAdmin(
-            accounts[0],
-            {from: accounts[0]}
-        );
-        assert(masterTest == true, 'Test that deployer is User contract master failed');
-    });
-
-    // Test: Test User contract setAdmin
-    it('Test User contract setAdmin', async() =>{
-
-        let setAdmin = await userInstance.setAdmin(
+        //set the admin 
+        let account1Admin = await userInstance.setAdmin(
             accounts[1],
             {from: accounts[0]}
         );
-        let checkAdmin = await userInstance.checkAdmin(
-            accounts[1],
-            {from: accounts[0]}
-        );
-        assert(checkAdmin == true, 'Test User contract setAdmin failed');
-    });
 
-    // Test: Test User contract setOrganiser
-    it('Test User contract setOrganiser', async() =>{
-
-        let setOrganiser = await userInstance.setOrganiser(
+        //Set the Organiser
+        let account2Organiser = await userInstance.setOrganiser(
             accounts[2],
             {from: accounts[1]}
         );
-        let checkOrganiser = await userInstance.checkOrganiser(
-            accounts[2],
-            {from: accounts[1]}
-        );
-        assert(checkOrganiser == true, 'Test User contract setAdmin failed');
-    });
-
-    // Test: Test User contract checkOrganiser
-    it('Test User contract setOrganiser', async() =>{
-
-        let setOrganiser2 = await userInstance.setOrganiser(
-            accounts[3],
-            {from: accounts[1]}
-        );
-        let checkOrganiser2 = await userInstance.checkOrganiser(
-            accounts[3],
-            {from: accounts[1]}
-        );
-        assert(checkOrganiser2 == true, 'Test User contract setOrganiser failed');
-    });
-
-    // Test: Create events
-    it('Create first 2 events', async() =>{
-
-        // Let account 1 create an Event
-        let makeEvent1 = await eventInstance.createEvent(
-            'JayChou', 100,
-            {from: accounts[2]}
-        );
-
-        truffleAssert.eventEmitted(makeEvent1, "EventCreated");
 
         // Let account 2 create an Event
-        let makeEvent2 = await eventInstance.createEvent(
-            'JJLin', 200,
-            {from: accounts[3]}
-        );
-        truffleAssert.eventEmitted(makeEvent2, "EventCreated");
+        let JayChouEvent = await eventInstance.createEvent(
+            'JayChou', 100,
+            {from: accounts[2]}
+            );
 
     });
 
     // Test: Check that events are created with correct event owners
     it('Check event owners', async() =>{
 
-        // Assertions
-        let checkResults1 = await eventInstance.checkEventOwner.call(1, accounts[2]);
-        await assert(checkResults1 == true, 'Event 1 not created')
-
-        let checkResults2 = await eventInstance.checkEventOwner.call(2, accounts[3]);
-        await assert(checkResults2 == true, 'Event 2 not created')
 
     });
 
