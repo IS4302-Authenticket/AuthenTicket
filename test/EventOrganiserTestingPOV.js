@@ -46,18 +46,20 @@ contract ('Authenticket - Event Organiser Testing POV', function(accounts){
             'JayChou', 100,
             {from: accounts[2]}
         );
+        let eventNumber1 = new BigNumber(makeEvent1['logs'][0]['args']['1']);
 
         // Let organiser 2 create an Event
         let makeEvent2 = await eventInstance.createEvent(
             'JJLin', 200,
             {from: accounts[3]}
         );
+        let eventNumber2 = new BigNumber(makeEvent2['logs'][0]['args']['1']);
 
         // List events
-        let listEvent1 = await marketInstance.listEvent(makeEvent1, {from: accounts[2]});
+        let listEvent1 = await marketInstance.listEvent(eventNumber1, {from: accounts[2]});
         truffleAssert.eventEmitted(listEvent1, "EventListed");
 
-        let listEvent2 = await marketInstance.listEvent(makeEvent2, {from: accounts[3]});
+        let listEvent2 = await marketInstance.listEvent(eventNumber2, {from: accounts[3]});
         truffleAssert.eventEmitted(listEvent2, "EventListed");
     });
 
