@@ -29,7 +29,7 @@ contract ('Authenticket - Admin Testing POV', function(accounts){
       }
 
     console.log("Testing Authenticket application from Admin user POV");
-
+    
     it('Test 1: Test that contract master is the first account', async() => {
        /* let masterTest1 = await userInstance.checkAdmin(
             accounts[0],
@@ -148,6 +148,6 @@ contract ('Authenticket - Admin Testing POV', function(accounts){
             {from: accounts[0]}
         );
     })*/
-
+ 
 
 })

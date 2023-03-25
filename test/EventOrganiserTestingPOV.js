@@ -29,7 +29,7 @@ contract ('Authenticket - Event Organiser Testing POV', function(accounts){
     });
 
     console.log("Testing Authenticket application from Event Organiser POV");
-
+    
     // Test: Check that event can be listed
     it('Check event can be listed', async() =>{
 
@@ -152,5 +152,5 @@ contract ('Authenticket - Event Organiser Testing POV', function(accounts){
 
 
     // Test: Check that event can only be listed/unlisted by organiser (test modifier if got time?)
-
+    
 })

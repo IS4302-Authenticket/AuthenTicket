@@ -25,6 +25,8 @@ contract ('Authenticket - User Testing POV', function(accounts){
         userInstance = await User.deployed();
         eventInstance = await Event.deployed();
         ticketInstance = await TicketNFT.deployed();
+        ticketFactoryInstance = await TicketFactory.deployed();
+        marketInstance = await Market.deployed();
     });
 
     console.log("Testing Authenticket application");
@@ -47,16 +49,34 @@ contract ('Authenticket - User Testing POV', function(accounts){
 
         // Let account 2 create an Event
         let JayChouEvent = await eventInstance.createEvent(
-            'JayChou', 100,
+            "JayChou", 100,
             {from: accounts[2]}
             );
+        
+        truffleAssert.eventEmitted(JayChouEvent, "EventCreated");
 
-    });
+        //need to confirm: do we list event first or create ticket first? 
+        //list the event
+        let listJayChouEvent = await marketInstance.listEvent(JayChouEvent, {from: accounts[2]});
+        truffleAssert.eventEmitted(listJayChouEvent, "EventListed");
+        //make the cat A tickets, resellable
+        let catAJayChouEvent = await ticketFactoryInstance.createTicketCategory(
+            JayChouEvent,     // uint256 eventID,
+            "A",            // string memory categoryName,
+            200,            // uint256 ticketPrice,
+            500,            // uint256 totalSupply,
+            250,            // uint256 priceCap,
+            true,           // bool isResellable,
+            5,              // uint256 maxTixPerUser
+        )
+        let listCatAJayChou = await marketInstance.listTicket(JayChouEvent, catAJayChouEvent, {from: accounts[2]});
+        
+        truffleAssert.eventEmitted(listCatAJayChou, "TicketListed");
 
-    // Test: Check that events are created with correct event owners
-    it('Check event owners', async() =>{
 
-
+        //make the cat B tickets, not resellable
+        
+    
     });
 
    
