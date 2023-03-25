@@ -12,7 +12,7 @@ contract Market {
     User userContract;
     Event eventContract;
 
-    // Mapping of ticketId to ticketPrice
+    // Mapping of ticketCategoryId to ticketPrice
     mapping(uint256 => uint256) listPrice; 
 
     // Mapping of eventId to eventName
@@ -58,9 +58,6 @@ contract Market {
     // event to unlist ticket successfully
     event TicketUnlisted(uint256 ticketCategoryId);
 
-    // event to buy ticket successfully
-    event TicketBought(uint ticketId);
-
     // event to refund ticket successfully
     event TicketRefunded(uint ticketId);
 
@@ -98,7 +95,7 @@ contract Market {
 
 
     // Buy tickets
-    function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable {
+    function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable returns(uint256) {
         require(listPrice[ticketCategoryId] != 0, "Ticket is not listed");
         uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);        
 
@@ -116,8 +113,7 @@ contract Market {
         if (newRemaining == 0) {
             unlistTicket(eventId, ticketCategoryId);
         }
-
-        emit TicketBought(ticketId);
+        return ticketId;
     }
 
 
