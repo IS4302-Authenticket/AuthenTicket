@@ -71,8 +71,8 @@ contract ResellMarket{
     //event to unlist successfully
     event ticketUnlisted(uint256 ticketId);
 
-    // event to buy successfully
-    event ticketBought(uint256 ticketId);
+    // // event to buy successfully
+    // event ticketBought(uint256 ticketId);
 
     // event to make offer for ticket (by buyers)
     event offerSubmitted(uint256 offerId, uint256 ticketId, uint256 offerPrice, address buyerAddress);
@@ -115,7 +115,7 @@ contract ResellMarket{
         (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
         require(msg.value > 0, "Please offer a bid > 0");
         require(msg.value <= ticketPriceCap, "Price listing is over price cap!");
-        
+
         // Make an offer for ticket
         uint256 currOfferID = numTicketOffers[ticketId];
         ticketOffer memory offerToSubmit = ticketOffer(msg.sender, msg.value, now);
