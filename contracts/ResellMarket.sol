@@ -19,14 +19,13 @@ contract ResellMarket{
     struct ticketOffer {
         address payable offerBidder;
         uint256 offerPrice;
-        uint timeStamp;
     }
 
-    // Mapping of TicketID to mapping of offerID to ticketOffer struct
-    mapping(uint256 => mapping(uint256 => ticketOffer)) listedTicketOffers;
+    // Mapping to highest bidder's ticketID for each ticketID
+    mapping(uint256 => ticketOffer) ticketHighestBidder;
     
-    // Mapping of ticketID to number of offers
-    mapping(uint256 => uint256) numTicketOffers;
+    // Mapping of ticketID to boolean value of whether offer present
+    mapping(uint256 => bool) ticketOfferPresent;
 
     constructor(TicketNFT ticketContract, TicketFactory ticketFactoryContract, User userContract) public {
         ticketNFT = ticketContract;
@@ -75,7 +74,7 @@ contract ResellMarket{
     // event ticketBought(uint256 ticketId);
 
     // event to make offer for ticket (by buyers)
-    event offerSubmitted(uint256 offerId, uint256 ticketId, uint256 offerPrice, address buyerAddress);
+    event offerSubmitted(uint256 ticketId, uint256 offerPrice, address buyerAddress);
 
     // event to sell ticket to highest offer (by ticket owner)
     event offersSettled(uint256 ticketId, uint256 offerPrice, address buyerAddress);
@@ -98,6 +97,12 @@ contract ResellMarket{
         return listedTickets[ticketId];
     }
 
+    // function to check the price of the ticket
+    function checkHighestBidPrice(uint256 ticketId) public view isListed(ticketId) returns (uint256) {
+        require(ticketOfferPresent[ticketId] == true, 'No bids present');
+        return ticketHighestBidder[ticketId].offerPrice;
+    }
+
     // // function to buy the ticket 
     // function buy(uint256 ticketId) public payable isListed(ticketId){
     //     require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
@@ -113,91 +118,53 @@ contract ResellMarket{
         // Make sure that offer price < price cap
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
-        require(msg.value > 0, "Please offer a bid > 0");
         require(msg.value <= ticketPriceCap, "Price listing is over price cap!");
 
+        // Check if other offers are present
+        if (ticketOfferPresent[ticketId] == true) {
+
+            // Check if bid beats the highest bidder so far
+            // If same bid price, offer not registered due to first-come-first-serve for bidding
+            uint256 highestPriceSoFar = ticketHighestBidder[ticketId].offerPrice;
+            require(msg.value > highestPriceSoFar, "Offer price <= current highest bid price");
+
+            // Return bidding value to previous sender
+            address payable bidderAddress = address(ticketHighestBidder[ticketId].offerBidder);
+            bidderAddress.transfer(ticketHighestBidder[ticketId].offerPrice);
+
+        // Update offer
+        } else {
+            ticketOfferPresent[ticketId] = true;
+        }
+
         // Make an offer for ticket
-        uint256 currOfferID = numTicketOffers[ticketId];
-        ticketOffer memory offerToSubmit = ticketOffer(msg.sender, msg.value, now);
-        listedTicketOffers[ticketId][currOfferID] = offerToSubmit;
-        emit offerSubmitted(currOfferID, ticketId, msg.value, msg.sender);
-        numTicketOffers[ticketId] += 1;
+        ticketOffer memory offerToSubmit = ticketOffer(msg.sender, msg.value);
+        ticketHighestBidder[ticketId] = offerToSubmit;
+        emit offerSubmitted(ticketId, msg.value, msg.sender);
     }
 
     // function for sellers to settle offer (sell to highest bidder)
     function settleOfffer(uint256 ticketId) public ownerOnly(ticketId) isListed(ticketId) {
 
         // Require that there are offers for ticket
-        uint256 numTicketOffersForTix = numTicketOffers[ticketId];
-        require(numTicketOffersForTix > 0, "No offers to settle");
+        require(ticketOfferPresent[ticketId] == true, "No offers to settle");
 
-        // Loop through all offers to find highest offer
-        uint256 highestPrice = 0;
-        uint256 highestOfferId;
-        uint256 highestOfferTimeStamp;
+        // Get details of offer
+        ticketOffer memory offerQueried = ticketHighestBidder[ticketId];
 
-        for (uint256 i = 0; i < numTicketOffersForTix; i++) {
-            ticketOffer memory offerQueried = listedTicketOffers[ticketId][i];
-            uint256 currOfferPrice = offerQueried.offerPrice;
-            uint256 currTimeStamp = offerQueried.timeStamp;
+        // Transfer bid amount to ticket owner
+        address payable tickerOwnerAddress = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+        tickerOwnerAddress.transfer(offerQueried.offerPrice);
 
-            // If offer price beats highest bidder
-            if (currOfferPrice > highestPrice) {
-                highestPrice = currOfferPrice;
-                highestOfferId = i;
-                highestOfferTimeStamp = currTimeStamp;
-            
-            // If offer price == highest bidder, check timestamp
-            } else if (currOfferPrice == highestPrice) {
+        // Transfer ownership of ticket
+        ticketNFT.transferOwnership(ticketId, offerQueried.offerBidder);
 
-                // If timestamp earlier, update this to bid winner thus far
-                if (currTimeStamp < highestOfferTimeStamp) {
-                    highestPrice = currOfferPrice;
-                    highestOfferId = i;
-                    highestOfferTimeStamp = currTimeStamp;
-                
-                // If timestamp later, lose bid
-                } else {
-                    continue;
-                }
-            
-            // If offer price < highest bidder, lose bid
-            } else {
-                continue;
-            }
-        }
-
-        // Settle payments, transfer ticket to winner
-        for (uint256 i = 0; i < numTicketOffersForTix; i++) {
-
-            // Get details of offer
-            ticketOffer memory offerQueried = listedTicketOffers[ticketId][i];
-            uint256 bidderOfferPrice = offerQueried.offerPrice;
-            address payable bidderAddress = address(offerQueried.offerBidder);
-
-            // If offer is highest bigger
-            if (i == highestOfferId) {
-
-                // Transfer bid amount to ticket owner
-                address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
-                recipient.transfer(bidderOfferPrice);
-
-                // Transfer ownership of ticket
-                ticketNFT.transferOwnership(ticketId, bidderAddress);
-
-                // Emit successful event
-                emit offersSettled(ticketId, bidderOfferPrice, bidderAddress);
-            
-            // Else refund bid price to bidders
-            } else {
-                bidderAddress.transfer(bidderOfferPrice);
-            }
-
-            // Delete offer
-            delete listedTicketOffers[ticketId][i];
-            
-        }
-        // After everything, clear mapping
-        numTicketOffers[ticketId] = 0;
+        // Emit successful event
+        emit offersSettled(ticketId, offerQueried.offerPrice, offerQueried.offerBidder);
+        
+        // Delete offer
+        delete ticketHighestBidder[ticketId];
+        delete ticketOfferPresent[ticketId];
+        
     }
 }
