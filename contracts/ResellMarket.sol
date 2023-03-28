@@ -98,20 +98,24 @@ contract ResellMarket{
         return listedTickets[ticketId];
     }
 
-    // function to buy the ticket 
-    function buy(uint256 ticketId) public payable isListed(ticketId){
-        require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
-        // transfer money to the prev owner 
-        address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
-        recipient.transfer(msg.value);
-        ticketNFT.transferOwnership(ticketId, msg.sender);
-        emit ticketBought(ticketId);
-    }
+    // // function to buy the ticket 
+    // function buy(uint256 ticketId) public payable isListed(ticketId){
+    //     require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
+    //     // transfer money to the prev owner 
+    //     address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+    //     recipient.transfer(msg.value);
+    //     ticketNFT.transferOwnership(ticketId, msg.sender);
+    //     emit ticketBought(ticketId);
+    // }
 
     // function for buyers to submit offer for ticket
     function offer(uint256 ticketId) public payable isListed(ticketId) {
-        // Make sure that offer price < ticket price
-        require(msg.value < listedTickets[ticketId], "Price >= ticket price, please buy ticket directly");
+        // Make sure that offer price < price cap
+        uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
+        (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
+        require(msg.value > 0, "Please offer a bid > 0");
+        require(msg.value <= ticketPriceCap, "Price listing is over price cap!");
+        
         // Make an offer for ticket
         uint256 currOfferID = numTicketOffers[ticketId];
         ticketOffer memory offerToSubmit = ticketOffer(msg.sender, msg.value, now);
