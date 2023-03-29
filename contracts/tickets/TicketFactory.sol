@@ -26,7 +26,9 @@ contract TicketFactory {
     mapping(uint256 => TicketCategory) public ticketCategories;
     uint256 ticketCategoryID = 0;
 
-    function createTicketCategory(
+    event TicketCreated(uint256 ticketCategory);
+
+    function createTicketCategory( //add organiser check 
         uint256 eventID,
         string memory categoryName,
         uint256 ticketPrice,
@@ -59,6 +61,9 @@ contract TicketFactory {
 
         // Update event capacity occupied from event contract
         eventContractInstance.updateEventCapacityOccupied(eventID, totalSupply);
+
+        //emit event 
+        emit TicketCreated(ticketCategoryID);
 
         return ticketCategoryID;
     }

@@ -47,29 +47,39 @@ contract ('Authenticket - User Testing POV', function(accounts){
             {from: accounts[1]}
         );
 
-        // Let account 2 create an Event
+        // Let account 2 create an Event, returns a uint256 but it is too big for js so need bn 
         let JayChouEvent = await eventInstance.createEvent(
-            "JayChou", 100,
+            "JayChou", 1000,
             {from: accounts[2]}
             );
         
         truffleAssert.eventEmitted(JayChouEvent, "EventCreated");
 
-        //need to confirm: do we list event first or create ticket first? 
-        //list the event
-        let listJayChouEvent = await marketInstance.listEvent(JayChouEvent, {from: accounts[2]});
+        //cast event ID to BN because too big for JS 
+        let JayChouEventBN = new BigNumber(JayChouEvent['logs'][0]['args']['1']);
+
+
+        //list the event using BN, doesnt return anything just calls an event  
+        let listJayChouEvent = await marketInstance.listEvent(JayChouEventBN, {from: accounts[2]});
         truffleAssert.eventEmitted(listJayChouEvent, "EventListed");
-        //make the cat A tickets, resellable
+
+        //make the cat A tickets, resellable, returns uint256 -> 1 
         let catAJayChouEvent = await ticketFactoryInstance.createTicketCategory(
-            JayChouEvent,     // uint256 eventID,
+            JayChouEventBN,     // uint256 eventID in BN,
             "A",            // string memory categoryName,
-            200,            // uint256 ticketPrice,
+            20,            // uint256 ticketPrice,
             500,            // uint256 totalSupply,
             250,            // uint256 priceCap,
             true,           // bool isResellable,
             5,              // uint256 maxTixPerUser
+            {from: accounts[2]}
         )
-        let listCatAJayChou = await marketInstance.listTicket(JayChouEvent, catAJayChouEvent, {from: accounts[2]});
+        //console.log("catAJayChouEvent = ", catAJayChouEvent);
+        //console.log(typeof(catAJayChouEvent));
+
+        truffleAssert.eventEmitted(catAJayChouEvent, "TicketCreated");
+
+        let listCatAJayChou = await marketInstance.listTicket(JayChouEventBN, catAJayChouEvent, {from: accounts[2]});
         
         truffleAssert.eventEmitted(listCatAJayChou, "TicketListed");
 
