@@ -3,7 +3,7 @@ const _deploy_contracts = require("../migrations/2_deploy_contracts");
 
 // require assertion frameworks to be correctly initialised
 const truffleAssert = require("truffle-assertions");
-const BigNumber = require('bignumber.js'); // npm install bignumber.js
+const BigNumber = require("bignumber.js"); // npm install bignumber.js
 
 var assert = require("assert");
 
@@ -17,22 +17,20 @@ var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
 var TicketFactory = artifacts.require("../contracts/TicketFactory.sol");
 var Market = artifacts.require("../contracts/Market.sol");
 
+// Testing with a POV of an Event Organiser
+contract("Authenticket - User Testing POV", function (accounts) {
+  // waits for 2 contracts to be deployed before testing can occur
+  before(async () => {
+    userInstance = await User.deployed();
+    eventInstance = await Event.deployed();
+    ticketInstance = await TicketNFT.deployed();
+    ticketFactoryInstance = await TicketFactory.deployed();
+    marketInstance = await Market.deployed();
+  });
 
-// Testing with a POV of an Event Organiser 
-contract ('Authenticket - User Testing POV', function(accounts){
+  console.log("Testing Authenticket application");
 
-    // waits for 2 contracts to be deployed before testing can occur
-    before( async() => {
-        userInstance = await User.deployed();
-        eventInstance = await Event.deployed();
-        ticketInstance = await TicketNFT.deployed();
-        ticketFactoryInstance = await TicketFactory.deployed();
-        marketInstance = await Market.deployed();
-    });
-
-    console.log("Testing Authenticket application");
-
-    /*
+  /*
     // Test 1: Initialization stage where we create all the stuff 
     it('Initialization Stage', async() =>{
 
@@ -107,66 +105,75 @@ contract ('Authenticket - User Testing POV', function(accounts){
         truffleAssert.eventEmitted(listCatBJayChou, "TicketListed");
     });*/
 
-    //Test 1: test that user can buy ticket 
-    it('Test 1: User can buy ticket', async() =>{
+  //Test 1: test that user can buy ticket
+  it("Test 1: User can buy ticket", async () => {
+    //set the admin
+    let account1Admin = await userInstance.setAdmin(accounts[1], {
+      from: accounts[0],
+    });
+    //Set the Organiser
+    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
+      from: accounts[1],
+    });
 
-        //set the admin 
-        let account1Admin = await userInstance.setAdmin(
-            accounts[1],
-            {from: accounts[0]}
-        );
-        //Set the Organiser
-        let account2Organiser = await userInstance.setOrganiser(
-            accounts[2],
-            {from: accounts[1]}
-        );
+    //set the user
+    let account3User = await userInstance.setUser(accounts[3], {
+      from: accounts[1],
+    });
 
-        //set the user
-        let account3User = await userInstance.setUser(
-            accounts[3],
-            {from: accounts[1]}
-        );
+    // Create jaychou event
+    let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(createJayChouEvent, "EventCreated");
 
-        // Create jaychou event 
-        let JayChouEvent = await eventInstance.createEvent(
-            "JayChou", 1000,
-            {from: accounts[2]}
-        );
-        truffleAssert.eventEmitted(JayChouEvent, "EventCreated");
+    let jayChouEventID = createJayChouEvent["logs"][0]["args"]["1"];
+    //let str = web3.utils.asciiToHex(JayChouEventID);
+    console.log("jaychoueventid: " + jayChouEventID);
 
-        //cast event ID to BN 
-        let JayChouEventBN = new BigNumber(JayChouEvent['logs'][0]['args']['1']);
+    //List Event
+    let listJayChouEvent = await marketInstance.listEvent(jayChouEventID, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listJayChouEvent, "EventListed");
 
-        //List Event 
-        let listJayChouEvent = await marketInstance.listEvent(JayChouEventBN, {from: accounts[2]});
+    //make the cat A ticket
+    let createVIPCatForJayChou =
+      await ticketFactoryInstance.createTicketCategory(
+        jayChouEventID, // bytes32,
+        "VIP", // string memory categoryName,
+        oneEth, // uint256 ticketPrice,
+        500, // uint256 totalSupply,
+        250, // uint256 priceCap,
+        true, // bool isResellable,
+        5, // uint256 maxTixPerUser
+        { from: accounts[2] }
+      );
 
-        //make the cat A ticket
-        let catAJayChouEvent = await ticketFactoryInstance.createTicketCategory(
-            JayChouEventBN,     // uint256 eventID in BN,
-            "A",            // string memory categoryName,
-            20,            // uint256 ticketPrice,
-            500,            // uint256 totalSupply,
-            250,            // uint256 priceCap,
-            true,           // bool isResellable,
-            5,              // uint256 maxTixPerUser
-            {from: accounts[2]}
-        )
-        //cast ticket to BN
-        let catAJayChouEventBN = new BigNumber(catAJayChouEvent['logs'][0]['args']['0']);
+    let jayChouVipCatID = new BigNumber(
+      createVIPCatForJayChou["logs"][0]["args"]["0"]
+    );
+    console.log(jayChouVipCatID.toNumber());
 
-        //list cat A ticket in market 
-        let listCatAJayChou = await marketInstance.listTicket(JayChouEventBN, catAJayChouEventBN, {from: accounts[2]});
-        truffleAssert.eventEmitted(listCatAJayChou, "TicketListed");
-        //console.log(listCatAJayChou);
-        //acc3 buy cat A jay chou ticket , takes in eventId, ticketCategoryId, numTickets
-        let acc3BuyJayChouTicketCatA = await marketInstance.buyTickets(JayChouEventBN,catAJayChouEvent,1, {from: accounts[3], value: oneEth});
-        truffleAssert.eventEmitted(acc3BuyJayChouTicketCatA, "TicketBought");
+    // list VIP ticket category in market
+    let listVIPCatJayChou = await marketInstance.listTicket(
+      jayChouEventID,
+      jayChouVipCatID,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listVIPCatJayChou, "TicketListed");
 
-    })
+    //console.log(listCatAJayChou);
+    //acc3 buy cat A jay chou ticket , takes in eventId, ticketCategoryId, numTickets
+    let acc3BuyJayChouVIPTicket = await marketInstance.buyTickets(
+      jayChouEventID,
+      jayChouVipCatID.toNumber(),
+      2,
+      { from: accounts[3], value: oneEth * 2 }
+    );
+    truffleAssert.eventEmitted(acc3BuyJayChouVIPTicket, "TicketBought");
+  });
 
-    //Test 2: User cannot buy more than number of tickets 
-    it('Initialization Stage', async() =>{
-
-    })
-
-})
+  //Test 2: User cannot buy more than number of tickets
+  it("Initialization Stage", async () => {});
+});

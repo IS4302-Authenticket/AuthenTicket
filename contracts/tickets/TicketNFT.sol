@@ -18,20 +18,27 @@ contract TicketNFT {
     // Mapping of Categories -> User -> Number of tickets
     mapping(uint256 => mapping(address => uint256)) mappingCategoryUserTixNum;
     // track ticket tokens
-    mapping(uint256 => Ticket) public tickets;
+    mapping(bytes32 => Ticket) public tickets;
 
     // Emit event when tickets are sold
     event TicketPurchased(
-        uint256 eventID,
+        bytes32 eventID,
         uint256 ticketCategoryID,
         address ticketOwner,
         uint256 ticketsPurchased
     );
 
+    event TicketMinted(
+        bytes32 eventID,
+        uint256 ticketCategoryID,
+        address ticketOwner,
+        bytes32 ticketID
+    );
+
     // Ticket Token Metadata
     // TODO: confirm attributes
     struct Ticket {
-        uint256 eventID;
+        bytes32 eventID;
         uint256 ticketCategoryID;
         bool isUsed;
         address owner;
@@ -40,23 +47,23 @@ contract TicketNFT {
     }
 
     // NEWWW!!!! modifier for valid ticket
-    modifier validTicketId(uint256 ticketId){
+    modifier validTicketId(bytes32 ticketId){
         require(tickets[ticketId].owner != address(0) , "Ticket ID not valid!");
         _;
     }
 
     // NEW!!!!! modifier for owner only
-    modifier ownerOnly(uint ticketId){
+    modifier ownerOnly(bytes32 ticketId){
         require(tickets[ticketId].owner == msg.sender, "Wrong Owner!");
         _;
     }
 
     // create a new TicketNFT
     function mintTicket(
-        uint256 eventID,
+        bytes32 eventID,
         uint256 ticketCategoryID,
         address owner
-    ) public returns (uint256) {
+    ) public returns (bytes32) {
         Ticket memory newTicket = Ticket(
             eventID,
             ticketCategoryID,
@@ -70,62 +77,70 @@ contract TicketNFT {
         require(ticketCategoryID > 0, "ticketCategoryID must be more than 0");
         
         //obtain unique hash value to use as key
-        uint256 ticketTokenID = uint256(keccak256(abi.encodePacked(eventID, ticketCategoryID, owner, block.timestamp)));
+        bytes32 ticketTokenID = keccak256(abi.encodePacked(eventID, ticketCategoryID, owner, block.timestamp));
         tickets[ticketTokenID] = newTicket;
-        //ticketFactory.ticketSold(ticketCategoryID);
+        ticketFactory.ticketSold(ticketCategoryID);
 
         // Update mapping of tickets that user has purchased
         mappingCategoryUserTixNum[ticketCategoryID][owner] += 1;
 
+        emit TicketMinted(eventID, ticketCategoryID, owner, ticketTokenID);
+       
         return ticketTokenID;
     }
 
     // Purchase ticket token
     function purchaseTicket(
-        uint256 eventID,
+        address buyer,
+        bytes32 eventID,
         uint256 ticketCategoryID,
         uint256 numTicketsPurchased
-    ) public payable returns (uint256) {
-        (, , uint256 ticketPrice, , uint256 remaining, , ,uint256 maxTixPerUser) = ticketFactory.getTicketCategory(ticketCategoryID);
+    ) public returns (bytes32[] memory) {
+        (, , , , uint256 remaining, , ,uint256 maxTixPerUser) = ticketFactory.getTicketCategory(ticketCategoryID);
 
         // Checks before issuing tickets
-        require(mappingCategoryUserTixNum[ticketCategoryID][msg.sender] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
-        require(msg.value == ticketPrice * numTicketsPurchased, "Incorrect amount sent");
+        require(mappingCategoryUserTixNum[ticketCategoryID][buyer] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
+        //require(msg.value == ticketPrice * numTicketsPurchased, "Incorrect amount sent");
         require(remaining >= numTicketsPurchased, "Not enough tickets remaining");
+
+        // initialize empty array of ticketIds
+        bytes32[] memory ticketIds = new bytes32[](numTicketsPurchased);
 
         // Issue tickets
         for (uint256 i = 0 ; i < numTicketsPurchased; i++) {
-            mintTicket(eventID, ticketCategoryID, msg.sender);
+            bytes32 ticketId = mintTicket(eventID, ticketCategoryID, buyer);
+            ticketIds[i] = ticketId;
         }
         
         // Emit event for successful ticket purchase
         emit TicketPurchased(eventID, ticketCategoryID, msg.sender, numTicketsPurchased);
+        return ticketIds;
     }
 
     // NEWWW!!!! transfer function
-    function transferOwnership(uint ticketId,address newOwner) public ownerOnly(ticketId) validTicketId(ticketId){
+    function transferOwnership(bytes32 ticketId,address newOwner) public ownerOnly(ticketId) validTicketId(ticketId){
         tickets[ticketId].prevOwner = tickets[ticketId].owner;
         tickets[ticketId].owner = newOwner;
     }
 
     // NEW!!!!!! getter functions
-    function getTicketEvent(uint256 ticketId) public view validTicketId(ticketId) returns(uint256){
+    function getTicketEvent(bytes32 ticketId) public view validTicketId(ticketId) returns(bytes32){
         return tickets[ticketId].eventID;
     }
 
-    function getTicketCategory(uint256 ticketId) public view validTicketId(ticketId) returns (uint256){
+    function getTicketCategory(bytes32 ticketId) public view validTicketId(ticketId) returns (uint256){
         return tickets[ticketId].ticketCategoryID;
     }
 
-    function getTicketStatus(uint ticketId) public view validTicketId(ticketId) returns (bool){
+    function getTicketStatus(bytes32 ticketId) public view validTicketId(ticketId) returns (bool){
         return tickets[ticketId].isUsed;
     }
 
-    function getTicketOwner(uint ticketId) public view validTicketId(ticketId) returns (address){
+    function getTicketOwner(bytes32 ticketId) public view validTicketId(ticketId) returns (address){
         return tickets[ticketId].owner;
     }
 
-    function getPrevOwner(uint ticketId) public view validTicketId(ticketId) returns (address){
+    function getPrevOwner(bytes32 ticketId) public view validTicketId(ticketId) returns (address){
         return tickets[ticketId].prevOwner;
     }
 

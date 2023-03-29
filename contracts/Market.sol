@@ -16,7 +16,7 @@ contract Market {
     mapping(uint256 => uint256) listPrice; 
 
     // Mapping of eventId to eventName
-    mapping(uint256 => string) listEventName;  
+    mapping(bytes32 => string) listEventName;  
 
     constructor(TicketFactory ticketFactory, TicketNFT ticket, User user, Event newEvent) public {
         ticketFactoryContract = ticketFactory;
@@ -34,23 +34,23 @@ contract Market {
     // }
 
     // Modifier to ensure function only callable by event owner (which should be an organiser) 
-    modifier eventOwnerOnly(uint256 eventId) {
+    modifier eventOwnerOnly(bytes32 eventId) {
         require(eventContract.checkEventOwner(eventId, msg.sender) == true, "Sender is not event owner");
         require(userContract.checkOrganiser(msg.sender) == true, "Owner is not an organizer");
         _;
     }
 
     // Modifier to ensure event is listed before listing tickets
-    modifier listedEvent(uint256 eventId) {
+    modifier listedEvent(bytes32 eventId) {
         require(bytes(listEventName[eventId]).length != 0, "Event is not listed");
         _;
     }
 
     // event to list event successfully
-    event EventListed(uint256 eventId);
+    event EventListed(bytes32 eventId);
 
     // event to unlist event successfully
-    event EventUnlisted(uint256 eventId);
+    event EventUnlisted(bytes32 eventId);
 
     // event to list ticket successfully
     event TicketListed(uint256 ticketCategoryId, uint256 ticketPrice);
@@ -59,18 +59,18 @@ contract Market {
     event TicketUnlisted(uint256 ticketCategoryId);
 
     // event to refund ticket successfully
-    event TicketRefunded(uint ticketId);
+    event TicketRefunded(bytes32 ticketId);
 
     //event to buy ticket successfully 
-    event TicketBought(uint256 ticketId, uint256 ticketCategoryId, uint256 numTickets);
+    event TicketBought(uint256 ticketCategoryId, uint256 numTickets);
 
     // Listing and unlisting event
-    function listEvent(uint256 eventId) eventOwnerOnly(eventId) public {
+    function listEvent(bytes32 eventId) eventOwnerOnly(eventId) public {
         listEventName[eventId] = eventContract.getEventName(eventId);
         emit EventListed(eventId);
     }
 
-    function unlistEvent(uint256 eventId) eventOwnerOnly(eventId) public {
+    function unlistEvent(bytes32 eventId) eventOwnerOnly(eventId) public {
         listEventName[eventId] = "";
         emit EventUnlisted(eventId);
     }
@@ -84,49 +84,59 @@ contract Market {
     //     emit TicketListed(ticketId);
     // }
 
-    function listTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) listedEvent(eventId) public {
+    function listTicket(bytes32 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) listedEvent(eventId) public {
         (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         listPrice[ticketCategoryId] = ticketPrice;
         emit TicketListed(ticketCategoryId, ticketPrice);
     }
 
-    function unlistTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) public {
+    function unlistTicket(bytes32 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) public {
        listPrice[ticketCategoryId] = 0;
        emit TicketUnlisted(ticketCategoryId);
     }
 
 
     // Buy tickets
-    function buyTickets(uint256 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable returns(uint256) {
+    function buyTickets(bytes32 eventId, uint256 ticketCategoryId, uint256 numTickets) public payable returns(bytes32[] memory) {
         require(listPrice[ticketCategoryId] != 0, "Ticket is not listed");
-        uint256 ticketId = ticketContract.purchaseTicket(eventId, ticketCategoryId, numTickets);        
+        require(msg.value == listPrice[ticketCategoryId] * numTickets, "Incorrect amount of ether sent");
+        bytes32[] memory ticketIds = ticketContract.purchaseTicket(msg.sender, eventId, ticketCategoryId, numTickets);
+        emit TicketBought(ticketCategoryId, numTickets);
+        return ticketIds;        
 
         // Update remaining tickets
-        for (int i = 0; i < int(numTickets); i++) {
-            ticketFactoryContract.ticketSold(ticketCategoryId); 
-        }
+        // for (int i = 0; i < int(numTickets); i++) {
+        //     ticketFactoryContract.ticketSold(ticketCategoryId); 
+        // }
+        // ** ^ i think should do in ticket contract
 
-        address payable recipient = address(uint160(ticketContract.getTicketOwner(ticketId)));  
-        recipient.transfer(msg.value);
-        ticketContract.transferOwnership(ticketId, msg.sender);
+        // ** is dis necessary! bcos there's no owner yet, is a new ticket
+        // address payable recipient = address(uint160(ticketContract.getTicketOwner(ticketId)));  
+        // recipient.transfer(msg.value);
+        // ticketContract.transferOwnership(ticketId, msg.sender);
 
         // Unlist tickets for a category if a catgory is sold out
-        (, , , , uint256 newRemaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
-        if (newRemaining == 0) {
-            unlistTicket(eventId, ticketCategoryId);
-        }
-        emit TicketBought(ticketId, ticketCategoryId, numTickets);
-        return ticketId;
+        // ** i think the ticketcategory should still be listed, bcos sold out just means sold out
+        // ** doesnt mean it should be unlisted / hidden from the market, just cannot buy only
+        // (, , , , uint256 newRemaining, , ,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
+        // if (newRemaining == 0) {
+        //     unlistTicket(eventId, ticketCategoryId);
+        // }
+        // ** i think this event will fail because you have multiple tickets purchased
+
+
+        // ** possibly multiple tickets again
+        // return ticketId;
     }
 
 
     // Refund tickets
-    function refundTickets(uint256 ticketId) public payable {
+    function refundTickets(bytes32 ticketId) public payable {
         address payable recipient = address(uint160(ticketContract.getPrevOwner(ticketId)));
         recipient.transfer(msg.value);
         ticketContract.transferOwnership(ticketId, address(this));
         uint256 ticketCategoryId = ticketContract.getTicketCategory(ticketId);
-        uint256 eventId = ticketContract.getTicketEvent(ticketId);
+        bytes32 eventId = ticketContract.getTicketEvent(ticketId);
         ticketFactoryContract.ticketRefund(ticketCategoryId);
         listTicket(eventId, ticketCategoryId);
         emit TicketRefunded(ticketId);

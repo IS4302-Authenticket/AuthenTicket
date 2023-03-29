@@ -12,7 +12,7 @@ contract ResellMarket{
     TicketFactory ticketFactory;
     User user;
     // mapping of TicketID to the price of the Ticket
-    mapping(uint256 => uint256) listedTickets;
+    mapping(bytes32 => uint256) listedTickets;
 
     constructor(TicketNFT ticketContract, TicketFactory ticketFactoryContract, User userContract) public {
         ticketNFT = ticketContract;
@@ -21,7 +21,7 @@ contract ResellMarket{
     }
 
     // modifier to see if the ticket is used
-    modifier ticketResellable(uint256 ticketId){
+    modifier ticketResellable(bytes32 ticketId){
         require(ticketNFT.getTicketStatus(ticketId) == false, "Ticket is already used. Cannot be listed");
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,,bool isTicketResellable,) = ticketFactory.getTicketCategory(ticketCategoryId);
@@ -30,7 +30,7 @@ contract ResellMarket{
     }
 
     // modifier to ensure function only callable by owner (which should be an user) 
-    modifier ownerOnly(uint256 ticketId){
+    modifier ownerOnly(bytes32 ticketId){
         address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
         require(prevOwnerAddress == msg.sender, "Wrong owner");
         require(user.checkUser(prevOwnerAddress) == true, "User is not a consumer! Cannot list in resell market");
@@ -38,7 +38,7 @@ contract ResellMarket{
     }
 
     // modifier to ensure price listed do not exceed max price
-    modifier priceExceed(uint256 ticketId, uint256 price){
+    modifier priceExceed(bytes32 ticketId, uint256 price){
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
         require( price <= ticketPriceCap, "Price listing is over price cap!");
@@ -46,39 +46,39 @@ contract ResellMarket{
     }
 
     // modifier to ensure ticket is listed
-    modifier isListed(uint256 ticketId){
+    modifier isListed(bytes32 ticketId){
         require(listedTickets[ticketId] != 0, "Ticket not listed!");
         _;
     }
 
     //event to list successfully
-    event ticketListed(uint256 ticketId);
+    event ticketListed(bytes32 ticketId);
 
     //event to unlist successfully
-    event ticketUnlisted(uint256 ticketId);
+    event ticketUnlisted(bytes32 ticketId);
 
     // event to buy successfully
-    event ticketBought(uint ticketId);
+    event ticketBought(bytes32 ticketId);
 
     // function to list ticket
-    function list(uint256 ticketId, uint256 price) public ownerOnly(ticketId) ticketResellable(ticketId) priceExceed(ticketId, price){
+    function list(bytes32 ticketId, uint256 price) public ownerOnly(ticketId) ticketResellable(ticketId) priceExceed(ticketId, price){
         listedTickets[ticketId] = price;
         emit ticketListed(ticketId);
     }
 
     // function to unlist ticket
-    function unlist(uint ticketId) public ownerOnly(ticketId) isListed(ticketId){
+    function unlist(bytes32 ticketId) public ownerOnly(ticketId) isListed(ticketId){
         listedTickets[ticketId] = 0;
         emit ticketUnlisted(ticketId);
     }
 
     // function to check the price of the ticket
-    function checkPrice(uint256 ticketId) public view isListed(ticketId) returns (uint256) {
+    function checkPrice(bytes32 ticketId) public view isListed(ticketId) returns (uint256) {
         return listedTickets[ticketId];
     }
 
     // function to buy the ticket 
-    function buy(uint256 ticketId) public payable isListed(ticketId){
+    function buy(bytes32 ticketId) public payable isListed(ticketId){
         require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
         // transfer money to the prev owner 
         address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));

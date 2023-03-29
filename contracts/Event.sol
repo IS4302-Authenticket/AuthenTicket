@@ -5,81 +5,118 @@ import "./User.sol";
 contract Event {
     // Instantiate user contract here to ensure that only organisers can create events
     User userContractInstance;
-    
+
     // Mapping of event ID to uniqueEvent struct that contains Event information
-    mapping(uint256 => uniqueEvent) public eventIdMappings;
+    mapping(bytes32 => uniqueEvent) public eventIdMappings;
 
     // Struct to store unique event information
     struct uniqueEvent {
         address eventOrganiser;
-        uint256 eventID;
+        bytes32 eventID;
         string eventName;
         uint256 eventMaxCapacity;
         uint256 eventCapacityOccupied;
     }
 
-    constructor (User userContractAddress) public {
+    constructor(User userContractAddress) public {
         userContractInstance = userContractAddress;
     }
 
     // Events
-    event EventCreated(address organiser, uint256 eventID);
-    event EventCapacityOccupiedUpdated(uint256 eventID, uint256 eventCapacityAdded, uint256 eventNewCapacity);
+    event EventCreated(address organiser, bytes32 eventID);
+    event EventCapacityOccupiedUpdated(
+        bytes32 eventID,
+        uint256 eventCapacityAdded,
+        uint256 eventNewCapacity
+    );
 
     // Modifier to ensure function is called by authorised organisers
     modifier organisersOnly() {
         //require(userContractInstance.checkOrganiser(msg.sender) == true, "msg.sender not organiser");
-        require(userContractInstance.checkOrganiser(tx.origin) == true, "msg.sender not organiser");
+        require(
+            userContractInstance.checkOrganiser(tx.origin) == true,
+            "msg.sender not organiser"
+        );
 
         _;
     }
 
-    function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public returns(uint256) {
-        uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, tx.origin)));
+    function createEvent(
+        string memory eventNameInput,
+        uint256 eventMaxCapacityInput
+    ) public organisersOnly returns (bytes32) {
+        bytes32 eventID = keccak256(
+            abi.encodePacked(block.timestamp, tx.origin)
+        );
         //bytes32 hashVal = keccak256(abi.encodePacked(block.timestamp, msg.sender));
         //uint256 eventID = uint256(hashVal);
         //uint256 eventID = uint256(eventMaxCapacityInput);
 
-        uniqueEvent memory newEvent = uniqueEvent(tx.origin, eventID, eventNameInput, eventMaxCapacityInput, 0);
+        uniqueEvent memory newEvent = uniqueEvent(
+            tx.origin,
+            eventID,
+            eventNameInput,
+            eventMaxCapacityInput,
+            0
+        );
         eventIdMappings[eventID] = newEvent;
         emit EventCreated(tx.origin, eventID);
         return eventID;
     }
 
-    function checkEventOwner(uint256 eventID, address organiserAddress) public view returns(bool) {
+    function checkEventOwner(
+        bytes32 eventID,
+        address organiserAddress
+    ) public view returns (bool) {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
         return (eventQueried.eventOrganiser == organiserAddress);
     }
-    
+
     // Getters
-    function getEventName(uint256 eventID) public view returns(string memory) {
+    function getEventName(bytes32 eventID) public view returns (string memory) {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventName; 
+        return eventQueried.eventName;
     }
 
-    function getEventCapacityOccupied(uint256 eventID) public view returns(uint256) {
+    function getEventCapacityOccupied(
+        bytes32 eventID
+    ) public view returns (uint256) {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventCapacityOccupied; 
+        return eventQueried.eventCapacityOccupied;
     }
 
-    function getEventMaxCapacity(uint256 eventID) public view returns(uint256) {
+    function getEventMaxCapacity(
+        bytes32 eventID
+    ) public view returns (uint256) {
         uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventMaxCapacity; 
+        return eventQueried.eventMaxCapacity;
     }
-    
+
     // Setter to update EventCapacityOccupied
-    function updateEventCapacityOccupied(uint256 eventID, uint256 capacityIncreased) organisersOnly public {
-
+    function updateEventCapacityOccupied(
+        bytes32 eventID,
+        uint256 capacityIncreased
+    ) public organisersOnly {
         // Check that adding event capacity wont exceed maxCapacity
-        uint256 currentEventCapacityOccupied = eventIdMappings[eventID].eventCapacityOccupied;
-        uint256 newEventCapacityOccupied = currentEventCapacityOccupied + capacityIncreased;
-        require(newEventCapacityOccupied <= eventIdMappings[eventID].eventMaxCapacity, "Cannot update event capacity (new capacity > max capacity)");
+        uint256 currentEventCapacityOccupied = eventIdMappings[eventID]
+            .eventCapacityOccupied;
+        uint256 newEventCapacityOccupied = currentEventCapacityOccupied +
+            capacityIncreased;
+        require(
+            newEventCapacityOccupied <=
+                eventIdMappings[eventID].eventMaxCapacity,
+            "Cannot update event capacity (new capacity > max capacity)"
+        );
 
         // Update mapping for event
-        eventIdMappings[eventID].eventCapacityOccupied = newEventCapacityOccupied;
+        eventIdMappings[eventID]
+            .eventCapacityOccupied = newEventCapacityOccupied;
 
         // Emit event
-        emit EventCapacityOccupiedUpdated(eventID, capacityIncreased, newEventCapacityOccupied);
+        emit EventCapacityOccupiedUpdated(
+            eventID,
+            capacityIncreased,
+            newEventCapacityOccupied
+        );
     }
-
 }
