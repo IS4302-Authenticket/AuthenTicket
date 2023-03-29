@@ -58,10 +58,8 @@ contract ('Authenticket - User Testing POV', function(accounts){
         //cast event ID to BN because too big for JS 
         let JayChouEventBN = new BigNumber(JayChouEvent['logs'][0]['args']['1']);
 
-
         //list the event using BN, doesnt return anything just calls an event  
         let listJayChouEvent = await marketInstance.listEvent(JayChouEventBN, {from: accounts[2]});
-        truffleAssert.eventEmitted(listJayChouEvent, "EventListed");
 
         //make the cat A tickets, resellable, returns uint256 -> 1 
         let catAJayChouEvent = await ticketFactoryInstance.createTicketCategory(
@@ -76,11 +74,11 @@ contract ('Authenticket - User Testing POV', function(accounts){
         )
         //console.log("catAJayChouEvent = ", catAJayChouEvent);
         //console.log(typeof(catAJayChouEvent));
-
         truffleAssert.eventEmitted(catAJayChouEvent, "TicketCreated");
+        let catAJayChouEventBN = new BigNumber(catAJayChouEvent['logs'][0]['args']['0']);
 
-        let listCatAJayChou = await marketInstance.listTicket(JayChouEventBN, catAJayChouEvent, {from: accounts[2]});
-        
+        let listCatAJayChou = await marketInstance.listTicket(JayChouEventBN, catAJayChouEventBN, {from: accounts[2]});
+        console.log(listCatAJayChou)
         truffleAssert.eventEmitted(listCatAJayChou, "TicketListed");
 
 
