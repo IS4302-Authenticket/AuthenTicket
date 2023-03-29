@@ -35,14 +35,14 @@ contract Event {
     }
 
     function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public returns(uint256) {
-        uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
+        uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, tx.origin)));
         //bytes32 hashVal = keccak256(abi.encodePacked(block.timestamp, msg.sender));
         //uint256 eventID = uint256(hashVal);
         //uint256 eventID = uint256(eventMaxCapacityInput);
 
-        uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput, 0);
+        uniqueEvent memory newEvent = uniqueEvent(tx.origin, eventID, eventNameInput, eventMaxCapacityInput, 0);
         eventIdMappings[eventID] = newEvent;
-        emit EventCreated(msg.sender, eventID);
+        emit EventCreated(tx.origin, eventID);
         return eventID;
     }
 

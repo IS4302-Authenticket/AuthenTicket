@@ -53,7 +53,7 @@ contract Market {
     event EventUnlisted(uint256 eventId);
 
     // event to list ticket successfully
-    event TicketListed(uint256 ticketCategoryId);
+    event TicketListed(uint256 ticketCategoryId, uint256 ticketPrice);
 
     // event to unlist ticket successfully
     event TicketUnlisted(uint256 ticketCategoryId);
@@ -61,6 +61,8 @@ contract Market {
     // event to refund ticket successfully
     event TicketRefunded(uint ticketId);
 
+    //event to buy ticket successfully 
+    event TicketBought(uint256 ticketId, uint256 ticketCategoryId, uint256 numTickets);
 
     // Listing and unlisting event
     function listEvent(uint256 eventId) eventOwnerOnly(eventId) public {
@@ -85,7 +87,7 @@ contract Market {
     function listTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) listedEvent(eventId) public {
         (, , uint256 ticketPrice, , , ,,) = ticketFactoryContract.getTicketCategory(ticketCategoryId);
         listPrice[ticketCategoryId] = ticketPrice;
-        emit TicketListed(ticketCategoryId);
+        emit TicketListed(ticketCategoryId, ticketPrice);
     }
 
     function unlistTicket(uint256 eventId, uint256 ticketCategoryId) eventOwnerOnly(eventId) public {
@@ -113,6 +115,7 @@ contract Market {
         if (newRemaining == 0) {
             unlistTicket(eventId, ticketCategoryId);
         }
+        emit TicketBought(ticketId, ticketCategoryId, numTickets);
         return ticketId;
     }
 

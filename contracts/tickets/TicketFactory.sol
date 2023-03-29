@@ -73,7 +73,7 @@ contract TicketFactory {
         _;
     }
 
-    function getTicketCategory(uint256 id) validTicketCategory(id) public view returns (
+    function getTicketCategory(uint256 id) public view returns (// validTicketCategory(id) removed valid ticket cat check cos its in BN form
         uint256, 
         string memory, 
         uint256, 
