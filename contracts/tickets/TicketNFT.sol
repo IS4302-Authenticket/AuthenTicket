@@ -100,18 +100,18 @@ contract TicketNFT {
 
         // Checks before issuing tickets
         require(mappingCategoryUserTixNum[ticketCategoryID][buyer] + numTicketsPurchased <= maxTixPerUser, "Max purchase limit for user reached");
-        //require(msg.value == ticketPrice * numTicketsPurchased, "Incorrect amount sent");
         require(remaining >= numTicketsPurchased, "Not enough tickets remaining");
 
         // initialize empty array of ticketIds
         bytes32[] memory ticketIds = new bytes32[](numTicketsPurchased);
 
-        // Issue tickets
+        // Issue tickets and update remaining tickets
         for (uint256 i = 0 ; i < numTicketsPurchased; i++) {
             bytes32 ticketId = mintTicket(eventID, ticketCategoryID, buyer);
             ticketIds[i] = ticketId;
+            ticketFactory.ticketSold(ticketCategoryID);
         }
-        
+
         // Emit event for successful ticket purchase
         emit TicketPurchased(eventID, ticketCategoryID, msg.sender, numTicketsPurchased);
         return ticketIds;
