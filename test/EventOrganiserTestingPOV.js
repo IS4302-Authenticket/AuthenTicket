@@ -29,6 +29,25 @@ contract ('Authenticket - Event Organiser Testing POV', function(accounts){
     });
 
     console.log("Testing Authenticket application from Event Organiser POV");
+
+    // Test: Check that event can be created
+    it('Check event can be created', async() =>{
+
+        // Set admin
+        let setAdmin = await userInstance.setAdmin(accounts[1], {from: accounts[0]});
+
+        // Only admin can set organiser
+        let setOrganiser = await userInstance.setOrganiser(accounts[2], {from: accounts[1]});
+
+        // Let organiser create an Event
+        let makeEvent = await eventInstance.createEvent(
+            // string memory eventNameInput, uint256 eventMaxCapacityInput
+            'JayChou', 1000,
+            {from: accounts[2]}
+        );
+        
+        truffleAssert.eventEmitted(makeEvent, "EventCreated");
+    });
     
     // Test: Check that event can be listed
     it('Check event can be listed', async() =>{
@@ -307,8 +326,60 @@ contract ('Authenticket - Event Organiser Testing POV', function(accounts){
         let unlistEvent = await marketInstance.unlistEvent(eventNumber, {from: accounts[2]});
         truffleAssert.eventEmitted(unlistEvent, "EventUnlisted");
     });
+    
 
+    // Test: Check that more tickets cannot be created beyond event max supply
+    it("Check that more tickets cannot be created for a category if it exceeds event max capacity", async () => {
+        // Set admin
+        let setAdmin = await userInstance.setAdmin(accounts[1], {from: accounts[0]});
 
-    // Test: Check that event can only be listed/unlisted by organiser (test modifier if got time?)
+        // Only admin can set organiser
+        let setOrganiser = await userInstance.setOrganiser(accounts[2], {from: accounts[1]});
+
+        // Let organiser create an Event
+        let makeEvent = await eventInstance.createEvent(
+            // string memory eventNameInput, uint256 eventMaxCapacityInput
+            'JayChou', 1000,
+            {from: accounts[2]}
+        );
+        let eventNumber = makeEvent['logs'][0]['args']['1'];
+
+        // List event
+        let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2]});
+        truffleAssert.eventEmitted(listEvent, "EventListed");
+
+        // Create event category A where totalSupply <= eventMaxCapacityInput
+        let makeCategory1 = await ticketFactoryInstance.createTicketCategory(
+            eventNumber,     // btyes32 eventID,
+            "A",            // string memory categoryName,
+            oneEth,         // uint256 ticketPrice,
+            1000,            // uint256 totalSupply,
+            250,            // uint256 priceCap,
+            true,           // bool isResellable,
+            5,              // uint256 maxTixPerUser
+            {from: accounts[2]}
+        )
+        let categoryNumber1 = new BigNumber(makeCategory1["logs"][0]["args"]["0"]);
+
+        // List ticket from category A
+        let listTicket = await marketInstance.listTicket(eventNumber, categoryNumber1, {from: accounts[2]});
+        truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+        // Create event category B where totalSupply > eventMaxCapacityInput
+        await truffleAssert.fails(
+            ticketFactoryInstance.createTicketCategory(
+                eventNumber,     // btyes32 eventID,
+                "B",            // string memory categoryName,
+                oneEth,         // uint256 ticketPrice,
+                1001,            // uint256 totalSupply,
+                250,            // uint256 priceCap,
+                true,           // bool isResellable,
+                5,              // uint256 maxTixPerUser
+                {from: accounts[2]}
+            ),
+            truffleAssert.ErrorType.REVERT
+        );
+    }); 
+
     
 })

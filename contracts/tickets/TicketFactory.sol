@@ -28,7 +28,18 @@ contract TicketFactory {
 
     event TicketCreated(uint256 ticketCategory, uint256 ticketPrice);
 
-    function createTicketCategory( //add organiser check 
+    // Modifier to ensure function is called by authorised organisers
+    modifier organisersOnly() {
+        //require(userContractInstance.checkOrganiser(msg.sender) == true, "msg.sender not organiser");
+        require(
+            userContractInstance.checkOrganiser(tx.origin) == true,
+            "msg.sender not organiser"
+        );
+
+        _;
+    }
+
+    function createTicketCategory(
         bytes32 eventID,
         string memory categoryName,
         uint256 ticketPrice,
@@ -36,7 +47,7 @@ contract TicketFactory {
         uint256 priceCap,
         bool isResellable,
         uint256 maxTixPerUser
-    ) public returns (uint256) {
+    ) public organisersOnly returns (uint256) {
 
         // Create TicketCategory
         TicketCategory memory newTicketCategory = TicketCategory(
