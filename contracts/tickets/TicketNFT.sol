@@ -115,7 +115,6 @@ contract TicketNFT {
         for (uint256 i = 0 ; i < numTicketsPurchased; i++) {
             bytes32 ticketId = mintTicket(eventID, ticketCategoryID, buyer);
             ticketIds[i] = ticketId;
-            ticketFactory.ticketSold(ticketCategoryID);
         }
 
         // Emit event for successful ticket purchase
