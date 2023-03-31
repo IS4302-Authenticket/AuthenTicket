@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "./User.sol";
 
 contract Event {
+
     // Instantiate user contract here to ensure that only organisers can create events
     User userContractInstance;
     
@@ -26,7 +27,7 @@ contract Event {
     event EventCreated(address organiser, uint256 eventID);
     event EventCapacityOccupiedUpdated(uint256 eventID, uint256 eventCapacityAdded, uint256 eventNewCapacity);
 
-    // Modifier to ensure function is called by authorised organisers
+    // Modifier to ensure function is called by organisers
     modifier organisersOnly() {
         require(userContractInstance.checkOrganiser(msg.sender) == true);
         _;
@@ -63,10 +64,14 @@ contract Event {
     // Setter to update EventCapacityOccupied
     function updateEventCapacityOccupied(uint256 eventID, uint256 capacityIncreased) organisersOnly public {
 
+        // Require that only organiser of particular event can update occupancy
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        require(tx.origin == eventQueried.eventOrganiser, 'Caller not organiser of particular event ID');
+
         // Check that adding event capacity wont exceed maxCapacity
-        uint256 currentEventCapacityOccupied = eventIdMappings[eventID].eventCapacityOccupied;
+        uint256 currentEventCapacityOccupied = eventQueried.eventCapacityOccupied;
         uint256 newEventCapacityOccupied = currentEventCapacityOccupied + capacityIncreased;
-        require(newEventCapacityOccupied <= eventIdMappings[eventID].eventMaxCapacity, "Cannot update event capacity (new capacity > max capacity)");
+        require(newEventCapacityOccupied <= eventQueried.eventMaxCapacity, "Cannot update event capacity (new capacity > max capacity)");
 
         // Update mapping for event
         eventIdMappings[eventID].eventCapacityOccupied = newEventCapacityOccupied;
