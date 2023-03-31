@@ -35,6 +35,11 @@ contract TicketNFT {
         bytes32 ticketID
     );
 
+    event TransferredOwnership(
+        bytes32 ticketId,
+        address newOwner
+    );
+
     // Ticket Token Metadata
     // TODO: confirm attributes
     struct Ticket {
@@ -54,7 +59,8 @@ contract TicketNFT {
 
     // NEW!!!!! modifier for owner only
     modifier ownerOnly(bytes32 ticketId){
-        require(tickets[ticketId].owner == msg.sender, "Wrong Owner!");
+        //require(tickets[ticketId].owner == msg.sender, "Wrong Owner!");
+        require(tickets[ticketId].owner == tx.origin, "Wrong Owner!");
         _;
     }
 
@@ -121,6 +127,7 @@ contract TicketNFT {
     function transferOwnership(bytes32 ticketId,address newOwner) public ownerOnly(ticketId) validTicketId(ticketId){
         tickets[ticketId].prevOwner = tickets[ticketId].owner;
         tickets[ticketId].owner = newOwner;
+        emit TransferredOwnership(ticketId, newOwner);
     }
 
     // NEW!!!!!! getter functions

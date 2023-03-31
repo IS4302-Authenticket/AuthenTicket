@@ -84,19 +84,25 @@ contract Market {
         // Mint tickets
         require(listPrice[ticketCategoryId] != 0, "Ticket is not listed");
         require(msg.value == listPrice[ticketCategoryId] * numTickets, "Incorrect amount of ether sent");
-        bytes32[] memory ticketIds = ticketContract.purchaseTicket(msg.sender, eventId, ticketCategoryId, numTickets);
-        // emit TicketBought(ticketCategoryId, numTickets);        
+        //bytes32[] memory ticketIds = ticketContract.purchaseTicket(msg.sender, eventId, ticketCategoryId, numTickets);
+        bytes32[] memory ticketIds = ticketContract.purchaseTicket(tx.origin, eventId, ticketCategoryId, numTickets);
 
-        // 
-        address payable recipient = address(uint160(address(this)));  
-        recipient.transfer(msg.value);
+        emit TicketBought(ticketCategoryId, numTickets);        
+        return ticketIds;
+        /*
+        address recepient = address(this);
+        address payable recepient2 = address(uint160(recepient));
+        recepient2.transfer(msg.value);
+        //address payable recipient = address(uint160(address(this)));  
+        //recipient.transfer(msg.value);
 
         for (uint256 i = 0; i < ticketIds.length; i++) {
             bytes32 ticketId = ticketIds[i];
-            ticketContract.transferOwnership(ticketId, msg.sender);
+            //ticketContract.transferOwnership(ticketId, msg.sender);
+            ticketContract.transferOwnership(ticketId, tx.origin);
         }
-
-        return ticketIds;
+        emit TicketBought(ticketCategoryId, numTickets);
+        return ticketIds;*/
     }
 
 
