@@ -176,8 +176,8 @@ contract("Authenticket - User Testing POV", function (accounts) {
   });
 
   //Test 2: User cannot buy more than number of tickets
-  it("User cannot buy more than number of tickets avail for a category", async () => {
-    //set the admin
+  it("Test 2: User cannot buy more than number of tickets avail for a category", async () => {
+    /*//set the admin
     let account1Admin = await userInstance.setAdmin(accounts[1], {
       from: accounts[0],
     });
@@ -189,7 +189,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     //set the user
     let account3User = await userInstance.setUser(accounts[3], {
       from: accounts[1],
-    });
+    });*/
 
     // Create jaychou event
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -234,18 +234,20 @@ contract("Authenticket - User Testing POV", function (accounts) {
     truffleAssert.eventEmitted(listVIPCatJayChou, "TicketListed");
 
     //try to buy more tickets than is avaiable in the category
-    truffleAssert.fails(
+    await truffleAssert.fails(
       marketInstance.buyTickets(jayChouEventID, jayChouVipCatID.toNumber(), 2, {
         from: accounts[3],
         value: oneEth * 2,
       }),
-      truffleAssert.ErrorType.REVERT
+      truffleAssert.ErrorType.REVERT,
+      "Max purchase limit for user reached"
     );
   });
 
-  //more for event organiser user testing 
-  it("cannot create more tickets for a category if it exceeds event max supply", async () => {
+  //more for event organiser user testing
+  it("Test 3: cannot create more tickets for a category if it exceeds event max supply", async () => {
     //set the admin
+    /*
     let account1Admin = await userInstance.setAdmin(accounts[1], {
       from: accounts[0],
     });
@@ -257,12 +259,13 @@ contract("Authenticket - User Testing POV", function (accounts) {
     //set the user
     let account3User = await userInstance.setUser(accounts[3], {
       from: accounts[1],
-    });
+    });*/
 
-    // Create jaychou event with 10 tickets
-    let createJayChouEvent = await eventInstance.createEvent("JayChou", 10, {
+    // Create jaychou event
+    let createJayChouEvent = await eventInstance.createEvent("JayChou", 100, {
       from: accounts[2],
     });
+    truffleAssert.eventEmitted(createJayChouEvent, "EventCreated");
 
     let jayChouEventID = createJayChouEvent["logs"][0]["args"]["1"];
 
@@ -270,14 +273,15 @@ contract("Authenticket - User Testing POV", function (accounts) {
     let listJayChouEvent = await marketInstance.listEvent(jayChouEventID, {
       from: accounts[2],
     });
+    truffleAssert.eventEmitted(listJayChouEvent, "EventListed");
 
-    //make the VIP ticket with 10 total supply, equal to max supply
+    //make the VIP ticket with 5 total supply, equal to max supply
     let createVIPCatForJayChou =
       await ticketFactoryInstance.createTicketCategory(
         jayChouEventID, // bytes32,
         "VIP", // string memory categoryName,
         oneEth, // uint256 ticketPrice,
-        5, // uint256 totalSupply,
+        80, // uint256 totalSupply,
         250, // uint256 priceCap,
         true, // bool isResellable,
         5, // uint256 maxTixPerUser
@@ -295,15 +299,16 @@ contract("Authenticket - User Testing POV", function (accounts) {
       { from: accounts[2] }
     );
 
-    //make the normal ticket with 10 total supply, 10 more than max supply
+    truffleAssert.eventEmitted(listVIPCatJayChou, "TicketListed");
+    //make the normal ticket with 100 total supply, clearly exceeds max 
 
     //try to list normal category ticket which throws exceeds max supply
-    truffleAssert.fails(
+    await truffleAssert.fails(
       ticketFactoryInstance.createTicketCategory(
         jayChouEventID, // bytes32,
         "Normal", // string memory categoryName,
         oneEth, // uint256 ticketPrice,
-        10, // uint256 totalSupply,
+        100, // uint256 totalSupply,
         250, // uint256 priceCap,
         true, // bool isResellable,
         5, // uint256 maxTixPerUser
@@ -311,10 +316,148 @@ contract("Authenticket - User Testing POV", function (accounts) {
       ),
       truffleAssert.ErrorType.REVERT
     );
+  }); 
 
+  it("Test 4: User cannot buy more tickets than the capped amount", async () => {
+    /*
+    //set the admin
+    let account1Admin = await userInstance.setAdmin(accounts[1], {
+      from: accounts[0],
+    });
+    //Set the Organiser
+    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
+      from: accounts[1],
+    });
+
+    //set the user
+    let account3User = await userInstance.setUser(accounts[3], {
+      from: accounts[1],
+    });*/
+
+    // Create jaychou event with 10 tickets
+    let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+
+    let jayChouEventID = createJayChouEvent["logs"][0]["args"]["1"];
+
+    //List Event
+    let listJayChouEvent = await marketInstance.listEvent(jayChouEventID, {
+      from: accounts[2],
+    });
+
+    //make the VIP ticket with 5 total supply, equal to max supply
+    let createVIPCatForJayChou =
+      await ticketFactoryInstance.createTicketCategory(
+        jayChouEventID, // bytes32,
+        "VIP", // string memory categoryName,
+        oneEth, // uint256 ticketPrice,
+        900, // uint256 totalSupply,
+        250, // uint256 priceCap,
+        true, // bool isResellable,
+        5, // uint256 maxTixPerUser
+        { from: accounts[2] }
+      );
+
+    let jayChouVipCatID = new BigNumber(
+      createVIPCatForJayChou["logs"][0]["args"]["0"]
+    );
+
+    // list VIP ticket category in market
+    let listVIPCatJayChou = await marketInstance.listTicket(
+      jayChouEventID,
+      jayChouVipCatID,
+      { from: accounts[2] }
+    );
+
+    truffleAssert.eventEmitted(listVIPCatJayChou, "TicketListed");
+
+    //buy 5 tickets, the max amount
+    let acc3BuyJayChouVIPTicket = await marketInstance.buyTickets(
+      jayChouEventID, 
+      jayChouVipCatID.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+    truffleAssert.eventEmitted(acc3BuyJayChouVIPTicket, "TicketBought");
+
+    //fail to buy 10 more tickets
+    await truffleAssert.fails(
+      marketInstance.buyTickets(jayChouEventID, jayChouVipCatID.toNumber(), 10, 
+      {
+        from: accounts[3],
+        value: oneEth*10,
+      }),
+      truffleAssert.ErrorType.REVERT
+      //"Max purchase limit for user reached"
+    );
   });
 
-  
+  it("Test 5: correct amount of money must be provided for user to buy tickets", async () => {
+     //set the admin
+     let account1Admin = await userInstance.setAdmin(accounts[1], {
+      from: accounts[0],
+    });
+    //Set the Organiser
+    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
+      from: accounts[1],
+    });
 
-  it("Initialization Stage", async () => {});
+    //set the user
+    let account3User = await userInstance.setUser(accounts[3], {
+      from: accounts[1],
+    });
+
+    // Create jaychou event with 10 tickets
+    let createJayChouEvent = await eventInstance.createEvent("JayChou", 100, {
+      from: accounts[2],
+    });
+
+    let jayChouEventID = createJayChouEvent["logs"][0]["args"]["1"];
+
+    //List Event
+    let listJayChouEvent = await marketInstance.listEvent(jayChouEventID, {
+      from: accounts[2],
+    });
+
+    //create a VIP ticket with each ticket price = 2 eth
+    let createVIPCatForJayChou =
+      await ticketFactoryInstance.createTicketCategory(
+        jayChouEventID, // bytes32,
+        "VIP", // string memory categoryName,
+        oneEth, // uint256 ticketPrice,
+        50, // uint256 totalSupply,
+        250, // uint256 priceCap,
+        true, // bool isResellable,
+        5, // uint256 maxTixPerUser
+        { from: accounts[2] }
+      );
+
+    let jayChouVipCatID = new BigNumber(
+      createVIPCatForJayChou["logs"][0]["args"]["0"]
+    );
+
+    // list VIP ticket category in market
+    let listVIPCatJayChou = await marketInstance.listTicket(
+      jayChouEventID,
+      jayChouVipCatID,
+      { from: accounts[2] }
+    );
+
+    //fail to buy ticket with only 1 eth provided
+    await truffleAssert.fails(
+      marketInstance.buyTickets(jayChouEventID, jayChouVipCatID.toNumber(), 1, 
+      {
+        from: accounts[3],
+        value: oneEth/2,
+      }),
+      truffleAssert.ErrorType.REVERT
+      //"Incorrect amount of ether sent"
+    );
+  })
+
+  it("User can refund ticket", async () => {
+
+  })
+
 });
