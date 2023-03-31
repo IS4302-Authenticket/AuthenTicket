@@ -33,6 +33,7 @@ contract Event {
         _;
     }
 
+    // Function to create event
     function createEvent(string memory eventNameInput, uint256 eventMaxCapacityInput) organisersOnly public {
         uint256 eventID = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
         uniqueEvent memory newEvent = uniqueEvent(msg.sender, eventID, eventNameInput, eventMaxCapacityInput, 0);
@@ -40,28 +41,7 @@ contract Event {
         emit EventCreated(msg.sender, eventID);
     }
 
-    function checkEventOwner(uint256 eventID, address organiserAddress) public view returns(bool) {
-        uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return (eventQueried.eventOrganiser == organiserAddress);
-    }
-    
-    // Getters
-    function getEventName(uint256 eventID) public view returns(string memory) {
-        uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventName; 
-    }
-
-    function getEventCapacityOccupied(uint256 eventID) public view returns(uint256) {
-        uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventCapacityOccupied; 
-    }
-
-    function getEventMaxCapacity(uint256 eventID) public view returns(uint256) {
-        uniqueEvent memory eventQueried = eventIdMappings[eventID];
-        return eventQueried.eventMaxCapacity; 
-    }
-    
-    // Setter to update EventCapacityOccupied
+    // Function to update EventCapacityOccupied
     function updateEventCapacityOccupied(uint256 eventID, uint256 capacityIncreased) organisersOnly public {
 
         // Require that only organiser of particular event can update occupancy
@@ -78,6 +58,30 @@ contract Event {
 
         // Emit event
         emit EventCapacityOccupiedUpdated(eventID, capacityIncreased, newEventCapacityOccupied);
+    }
+    
+    // Getter function to check if organiserAddress is event owner of eventID
+    function checkEventOwner(uint256 eventID, address organiserAddress) public view returns(bool) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return (eventQueried.eventOrganiser == organiserAddress);
+    }
+
+    // Getter function to get eventName for given eventID
+    function getEventName(uint256 eventID) public view returns(string memory) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventName; 
+    }
+
+    // Getter function to get eventCapacityOccupied for given eventID
+    function getEventCapacityOccupied(uint256 eventID) public view returns(uint256) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventCapacityOccupied; 
+    }
+
+    // Getter function to get eventMaxCapacity for given eventID
+    function getEventMaxCapacity(uint256 eventID) public view returns(uint256) {
+        uniqueEvent memory eventQueried = eventIdMappings[eventID];
+        return eventQueried.eventMaxCapacity; 
     }
 
 }
