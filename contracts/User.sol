@@ -58,9 +58,9 @@ contract User {
         return true;
     }
 
-    // Getter function to check if person is admin
+    // Getter function to check if person is admin / master (admin by default)
     function checkAdmin(address addressInput) public view returns (bool) {
-        return (userTypeMapping[addressInput] == userType.admin);
+        return (userTypeMapping[addressInput] == userType.admin) || (addressInput == contractMaster);
     }
 
     // Getter function to check if person is organiser
