@@ -31,9 +31,11 @@ contract ResellMarket{
 
     // modifier to ensure function only callable by owner (which should be an user) 
     modifier ownerOnly(bytes32 ticketId){
-        address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
-        require(prevOwnerAddress == msg.sender, "Wrong owner");
-        require(user.checkUser(prevOwnerAddress) == true, "User is not a consumer! Cannot list in resell market");
+        //address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
+        //require(prevOwnerAddress == tx.origin, "Wrong owner");
+        address owner = ticketNFT.getTicketOwner(ticketId);
+        require(owner == tx.origin, "Wrong owner");
+        require(user.checkUser(owner) == true, "User is not a consumer! Cannot list in resell market");
         _;
     }
 
@@ -81,9 +83,10 @@ contract ResellMarket{
     function buy(bytes32 ticketId) public payable isListed(ticketId){
         require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
         // transfer money to the prev owner 
-        address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+        //address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+        address payable recipient = address(uint160(ticketNFT.getTicketOwner(ticketId)));
         recipient.transfer(msg.value);
-        ticketNFT.transferOwnership(ticketId, msg.sender);
+        ticketNFT.transferOwnershipResell(ticketId, tx.origin);
         emit ticketBought(ticketId);
     }
 }

@@ -25,7 +25,8 @@ contract TicketNFT {
         bytes32 eventID,
         uint256 ticketCategoryID,
         address ticketOwner,
-        uint256 ticketsPurchased
+        uint256 ticketsPurchased,
+        bytes32 firstTicketBoughtId
     );
 
     event TicketMinted(
@@ -116,14 +117,24 @@ contract TicketNFT {
             bytes32 ticketId = mintTicket(eventID, ticketCategoryID, buyer);
             ticketIds[i] = ticketId;
         }
+        bytes32 firstTicketBoughtId = ticketIds[0];
 
         // Emit event for successful ticket purchase
-        emit TicketPurchased(eventID, ticketCategoryID, msg.sender, numTicketsPurchased);
+        emit TicketPurchased(eventID, ticketCategoryID, tx.origin, numTicketsPurchased,firstTicketBoughtId);
         return ticketIds;
     }
 
     // NEWWW!!!! transfer function
     function transferOwnership(bytes32 ticketId,address newOwner) public ownerOnly(ticketId) validTicketId(ticketId){
+        tickets[ticketId].prevOwner = tickets[ticketId].owner;
+        tickets[ticketId].owner = newOwner;
+        emit TransferredOwnership(ticketId, newOwner);
+    }
+
+    //new transfer ownership function for resell market. transfer ownership fn above wont work 
+    //because transferOwnership requires the caller to be owner. but the caller for someone that 
+    //buys the ticket on the resell market is not the owner
+    function transferOwnershipResell(bytes32 ticketId,address newOwner) public validTicketId(ticketId){
         tickets[ticketId].prevOwner = tickets[ticketId].owner;
         tickets[ticketId].owner = newOwner;
         emit TransferredOwnership(ticketId, newOwner);

@@ -54,7 +54,8 @@ contract Market {
     event TicketRefunded(bytes32 ticketId);
 
     //event to buy ticket successfully 
-    event TicketBought(uint256 ticketCategoryId, uint256 numTickets);
+    event TicketBought(bytes32 ticketIdFirst, uint256 ticketCategoryId, uint256 numTickets, address buyer);
+    //event TicketBought(bytes32 ticketId);
 
     // Listing and unlisting event
     function listEvent(bytes32 eventId) eventOwnerOnly(eventId) public {
@@ -87,7 +88,11 @@ contract Market {
         //bytes32[] memory ticketIds = ticketContract.purchaseTicket(msg.sender, eventId, ticketCategoryId, numTickets);
         bytes32[] memory ticketIds = ticketContract.purchaseTicket(tx.origin, eventId, ticketCategoryId, numTickets);
 
-        emit TicketBought(ticketCategoryId, numTickets);        
+        bytes32 ticketIdFirst = ticketIds[0];
+        emit TicketBought(ticketIdFirst,ticketCategoryId, numTickets, tx.origin);      
+        //for(uint256 index = 0; index < ticketIds.length; index++){
+         //   emit TicketBought(ticketIds[index]);
+        //}
         return ticketIds;
         /*
         address recepient = address(this);

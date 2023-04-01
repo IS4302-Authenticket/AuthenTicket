@@ -16,6 +16,7 @@ var Event = artifacts.require("../contracts/Event.sol");
 var TicketNFT = artifacts.require("../contracts/TicketNFT.sol");
 var TicketFactory = artifacts.require("../contracts/TicketFactory.sol");
 var Market = artifacts.require("../contracts/Market.sol");
+var ResellMarket = artifacts.require("../contracts/ResellMarket.sol");
 
 // Testing with a POV of an Event Organiser
 contract("Authenticket - User Testing POV", function (accounts) {
@@ -26,6 +27,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     ticketInstance = await TicketNFT.deployed();
     ticketFactoryInstance = await TicketFactory.deployed();
     marketInstance = await Market.deployed();
+    resellMarketInstance = await ResellMarket.deployed();
   });
 
   console.log("Testing Authenticket application");
@@ -177,19 +179,6 @@ contract("Authenticket - User Testing POV", function (accounts) {
 
   //Test 2: User cannot buy more than number of tickets
   it("Test 2: User cannot buy more than number of tickets avail for a category", async () => {
-    /*//set the admin
-    let account1Admin = await userInstance.setAdmin(accounts[1], {
-      from: accounts[0],
-    });
-    //Set the Organiser
-    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
-      from: accounts[1],
-    });
-
-    //set the user
-    let account3User = await userInstance.setUser(accounts[3], {
-      from: accounts[1],
-    });*/
 
     // Create jaychou event
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -246,20 +235,6 @@ contract("Authenticket - User Testing POV", function (accounts) {
 
   //more for event organiser user testing
   it("Test 3: cannot create more tickets for a category if it exceeds event max supply", async () => {
-    //set the admin
-    /*
-    let account1Admin = await userInstance.setAdmin(accounts[1], {
-      from: accounts[0],
-    });
-    //Set the Organiser
-    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
-      from: accounts[1],
-    });
-
-    //set the user
-    let account3User = await userInstance.setUser(accounts[3], {
-      from: accounts[1],
-    });*/
 
     // Create jaychou event
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 100, {
@@ -319,20 +294,6 @@ contract("Authenticket - User Testing POV", function (accounts) {
   }); 
 
   it("Test 4: User cannot buy more tickets than the capped amount", async () => {
-    /*
-    //set the admin
-    let account1Admin = await userInstance.setAdmin(accounts[1], {
-      from: accounts[0],
-    });
-    //Set the Organiser
-    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
-      from: accounts[1],
-    });
-
-    //set the user
-    let account3User = await userInstance.setUser(accounts[3], {
-      from: accounts[1],
-    });*/
 
     // Create jaychou event with 10 tickets
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -394,19 +355,6 @@ contract("Authenticket - User Testing POV", function (accounts) {
   });
 
   it("Test 5: correct amount of money must be provided for user to buy tickets", async () => {
-     //set the admin
-     let account1Admin = await userInstance.setAdmin(accounts[1], {
-      from: accounts[0],
-    });
-    //Set the Organiser
-    let account2Organiser = await userInstance.setOrganiser(accounts[2], {
-      from: accounts[1],
-    });
-
-    //set the user
-    let account3User = await userInstance.setUser(accounts[3], {
-      from: accounts[1],
-    });
 
     // Create jaychou event with 10 tickets
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 100, {
@@ -454,10 +402,661 @@ contract("Authenticket - User Testing POV", function (accounts) {
       truffleAssert.ErrorType.REVERT
       //"Incorrect amount of ether sent"
     );
-  })
+  }) 
 
-  it("User can refund ticket", async () => {
+  it('Test 6: Check that tickets can be refunded', async() =>{
+          //set the admin 
+          let account1Admin = await userInstance.setAdmin(
+            accounts[1],
+            {from: accounts[0]}
+        );
 
-  })
+        //Set the Organiser
+        let account2Organiser = await userInstance.setOrganiser(
+            accounts[2],
+            {from: accounts[1]}
+        );
 
+        //set the user
+        let account3User = await userInstance.setUser(
+            accounts[3],
+            {from: accounts[1]}
+        );
+
+        // Let organiser create an Event
+        let makeEvent = await eventInstance.createEvent(
+            // string memory eventNameInput, uint256 eventMaxCapacityInput
+            'JayChou', 1000,
+            {from: accounts[2]}
+        );
+        let eventNumber = makeEvent['logs'][0]['args']['1'];
+
+        // List event
+        let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2]});
+        truffleAssert.eventEmitted(listEvent, "EventListed");
+
+        // Create event categories
+        let makeCategory = await ticketFactoryInstance.createTicketCategory(
+            eventNumber,    // btyes32 eventID,
+            "A",            // string memory categoryName,
+            oneEth,         // uint256 ticketPrice,
+            500,            // uint256 totalSupply,
+            250,            // uint256 priceCap,
+            true,           // bool isResellable,
+            5,              // uint256 maxTixPerUser
+            {from: accounts[2]}
+        )
+
+        let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+        // List tickets
+        let listTicket = await marketInstance.listTicket(eventNumber, categoryNumber, {from: accounts[2]});
+        truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+        // Buy tickets
+        let buyTicket = await marketInstance.buyTickets(eventNumber, categoryNumber.toNumber(), 1, {from: accounts[3], value: oneEth});
+        console.log(buyTicket['logs'][0]['args'][0]);
+        //console.log(buyTicket['logs'][0]['args'])
+
+      
+        truffleAssert.eventEmitted(buyTicket, "TicketBought");
+        let ticketId = buyTicket['logs'][0]['args'][0];
+
+        //let ticketId = web3.utils.padLeft(web3.utils.numberToHex(ticketIdBN.toNumber()), 64);  // convert to bytes
+      
+        // Refund the first ticket
+        let refundTicket = await marketInstance.refundTickets(ticketId, {from: accounts[3], value: oneEth});
+        truffleAssert.eventEmitted(refundTicket, "TicketRefunded");
+     });
+      
+     it('Test 7: ticket that doenst belong to buyer cannot be refunded', async() =>{
+      //set the admin 
+      let account1Admin = await userInstance.setAdmin(
+        accounts[1],
+        {from: accounts[0]}
+    );
+
+    //Set the Organiser
+    let account2Organiser = await userInstance.setOrganiser(
+        accounts[2],
+        {from: accounts[1]}
+    );
+
+    //set the user
+    let account3User = await userInstance.setUser(
+        accounts[3],
+        {from: accounts[1]}
+    );
+
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent(
+        // string memory eventNameInput, uint256 eventMaxCapacityInput
+        'JayChou', 1000,
+        {from: accounts[2]}
+    );
+    let eventNumber = makeEvent['logs'][0]['args']['1'];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2]});
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+        eventNumber,    // btyes32 eventID,
+        "A",            // string memory categoryName,
+        oneEth,         // uint256 ticketPrice,
+        500,            // uint256 totalSupply,
+        250,            // uint256 priceCap,
+        true,           // bool isResellable,
+        5,              // uint256 maxTixPerUser
+        {from: accounts[2]}
+    )
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(eventNumber, categoryNumber, {from: accounts[2]});
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let acc3buyTicket = await marketInstance.buyTickets(eventNumber, categoryNumber.toNumber(), 1, {from: accounts[3], value: oneEth});
+  
+    //truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let acc3ticketId = acc3buyTicket['logs'][0]['args'][0];
+  
+    // Refund the first ticket
+    await truffleAssert.fails(
+      marketInstance.refundTickets(acc3ticketId, {from: accounts[4], value: oneEth}),
+      truffleAssert.ErrorType.REVERT,
+      "Wrong Owner!"
+    );
+
+ });
+
+  it("Test 8: Buyer can list ticket in resell market", async () => {
+  
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent(
+      // string memory eventNameInput, uint256 eventMaxCapacityInput
+      "JayChou",
+      1000,
+      { from: accounts[2] }
+    );
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(
+      eventNumber,
+      categoryNumber,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+    //console.log(buyTicket["logs"][0]["args"][0]);
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    let listTicketOnResellMarket = await resellMarketInstance.list(ticketId, oneEth.dividedBy(10), {from:accounts[3]})
+    truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
+  });
+
+  it("Test 9: Buyer cannot list more than capped amount for ticket in resell market", async () => {
+
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2],});
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth.dividedBy(10), // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(eventNumber,categoryNumber,{ from: accounts[2] });
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    await truffleAssert.fails(
+      resellMarketInstance.list(ticketId, oneEth, {from:accounts[3]}),
+      truffleAssert.ErrorType.REVERT,
+      "Price listing is over price cap!"
+    );
+  });
+  
+  it("Test 10: Buyer cannot list unresellable ticket", async () => {
+
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2],});
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      false, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(eventNumber,categoryNumber,{ from: accounts[2] });
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    await truffleAssert.fails(
+      resellMarketInstance.list(ticketId, oneEth, {from:accounts[3]}),
+      truffleAssert.ErrorType.REVERT,
+      "Ticket category is not resellable, ticket cannot be listed"
+    );
+  });
+
+  it("Test 11: Buyer cannot list ticket that they did not buy", async () => {
+
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2],});
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(eventNumber,categoryNumber,{ from: accounts[2] });
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    await truffleAssert.fails(
+      resellMarketInstance.list(ticketId, oneEth, {from:accounts[4]}),
+      truffleAssert.ErrorType.REVERT,
+      "Wrong owner"
+    );
+  });
+  
+  it("Test 12: Buyer can unlist ticket", async () => {
+     
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2],});
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(eventNumber,categoryNumber,{ from: accounts[2] });
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+    
+    let listTicketOnResellMarket = await resellMarketInstance.list(ticketId, oneEth.dividedBy(10), {from:accounts[3]});
+    truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
+
+    let unlistTicketOnResellMarket = await resellMarketInstance.unlist(ticketId, {from:accounts[3]});
+    truffleAssert.eventEmitted(unlistTicketOnResellMarket, "ticketUnlisted");
+
+  });
+  it("Test 13: Only Buyer can unlist ticket", async () => {
+    //set the admin
+    let account1Admin = await userInstance.setAdmin(accounts[1], {
+     from: accounts[0],
+   });
+
+   //Set the Organiser
+   let account2Organiser = await userInstance.setOrganiser(accounts[2], {
+     from: accounts[1],
+   });
+
+   //set the user
+   let account3User = await userInstance.setUser(accounts[3], {
+     from: accounts[1],
+   });
+   // Let organiser create an Event
+   let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
+   let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+   // List event
+   let listEvent = await marketInstance.listEvent(eventNumber, {from: accounts[2],});
+   truffleAssert.eventEmitted(listEvent, "EventListed");
+
+   // Create event categories
+   let makeCategory = await ticketFactoryInstance.createTicketCategory(
+     eventNumber, // btyes32 eventID,
+     "A", // string memory categoryName,
+     oneEth, // uint256 ticketPrice,
+     500, // uint256 totalSupply,
+     oneEth, // uint256 priceCap,
+     true, // bool isResellable,
+     100, // uint256 maxTixPerUser
+     { from: accounts[2] }
+   );
+
+   let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+   // List tickets
+   let listTicket = await marketInstance.listTicket(eventNumber,categoryNumber,{ from: accounts[2] });
+   truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+   // Buy tickets
+   let buyTicket = await marketInstance.buyTickets(
+     eventNumber,
+     categoryNumber.toNumber(),
+     1,
+     { from: accounts[3], value: oneEth }
+   );
+
+   truffleAssert.eventEmitted(buyTicket, "TicketBought");
+   let ticketId = buyTicket["logs"][0]["args"][0];
+   
+   let listTicketOnResellMarket = await resellMarketInstance.list(ticketId, oneEth.dividedBy(10), {from:accounts[3]});
+   truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
+
+   await truffleAssert.fails(
+    resellMarketInstance.unlist(ticketId, {from:accounts[4]}),
+    truffleAssert.ErrorType.REVERT,
+    "Wrong owner"
+    );
+ });
+
+  it("Test 14: Buyer can only list ticket that they bought", async () => {
+   
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(
+      eventNumber,
+      categoryNumber,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    await truffleAssert.fails(
+      resellMarketInstance.list(
+        ticketId,
+        oneEth.dividedBy(10),
+        { from: accounts[4] }
+      ),
+      truffleAssert.ErrorType.REVERT,
+      "Wrong owner"
+      );
+  });
+
+  it("Test 15: Buyer can buy a ticket on the resell market", async () => {
+   
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(
+      eventNumber,
+      categoryNumber,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    let listTicketOnResellMarket = await resellMarketInstance.list(ticketId, oneEth.dividedBy(10), {from:accounts[3]});
+    truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
+
+    let buyTicketonResellMarket = await resellMarketInstance.buy(ticketId, {from:accounts[4], value:oneEth.dividedBy(10)});
+    truffleAssert.eventEmitted(buyTicketonResellMarket, "ticketBought");
+  });
+
+  it("Test 16: Buyer cannot buy a ticket on resell market with insufficient money", async () => {
+  
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(
+      eventNumber,
+      categoryNumber,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+    let listTicketOnResellMarket = await resellMarketInstance.list(ticketId, oneEth.dividedBy(10), {from:accounts[3]});
+    truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
+
+    await truffleAssert.fails(
+      resellMarketInstance.buy(ticketId, {from:accounts[4], value:oneEth.dividedBy(100)}),
+      truffleAssert.ErrorType.REVERT,
+      "Insufficient money to buy the ticket"
+      );
+    
+  });
+
+  it("Test 17: Buyer cannot buy a unlisted ticket on resell market", async () => {
+   
+    // Let organiser create an Event
+    let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
+      from: accounts[2],
+    });
+    let eventNumber = makeEvent["logs"][0]["args"]["1"];
+
+    // List event
+    let listEvent = await marketInstance.listEvent(eventNumber, {
+      from: accounts[2],
+    });
+    truffleAssert.eventEmitted(listEvent, "EventListed");
+
+    // Create event categories
+    let makeCategory = await ticketFactoryInstance.createTicketCategory(
+      eventNumber, // btyes32 eventID,
+      "A", // string memory categoryName,
+      oneEth, // uint256 ticketPrice,
+      500, // uint256 totalSupply,
+      oneEth, // uint256 priceCap,
+      true, // bool isResellable,
+      100, // uint256 maxTixPerUser
+      { from: accounts[2] }
+    );
+
+    let categoryNumber = new BigNumber(makeCategory["logs"][0]["args"]["0"]);
+
+    // List tickets
+    let listTicket = await marketInstance.listTicket(
+      eventNumber,
+      categoryNumber,
+      { from: accounts[2] }
+    );
+    truffleAssert.eventEmitted(listTicket, "TicketListed");
+
+    // Buy tickets
+    let buyTicket = await marketInstance.buyTickets(
+      eventNumber,
+      categoryNumber.toNumber(),
+      1,
+      { from: accounts[3], value: oneEth }
+    );
+
+    truffleAssert.eventEmitted(buyTicket, "TicketBought");
+    let ticketId = buyTicket["logs"][0]["args"][0];
+
+
+    await truffleAssert.fails(
+      resellMarketInstance.buy(ticketId, {from:accounts[4], value:oneEth}),
+      truffleAssert.ErrorType.REVERT,
+      "Ticket not listed!"
+      );
+
+    });
 });
