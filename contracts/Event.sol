@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "./User.sol";
 
 contract Event {
+
     // Instantiate user contract here to ensure that only organisers can create events
     User userContractInstance;
 
@@ -30,14 +31,13 @@ contract Event {
         uint256 eventNewCapacity
     );
 
-    // Modifier to ensure function is called by authorised organisers
+    // Modifier to ensure function is called by organisers
     modifier organisersOnly() {
         //require(userContractInstance.checkOrganiser(msg.sender) == true, "msg.sender not organiser");
         require(
             userContractInstance.checkOrganiser(tx.origin) == true,
             "msg.sender not organiser"
         );
-
         _;
     }
 
