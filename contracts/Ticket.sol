@@ -15,7 +15,7 @@ contract Ticket {
     }
 
     // Mapping of event ID to mapping of Zone Name to uniqueZoneTicket struct
-    mapping(uint256 => mapping(string => uniqueZoneTicket)) public ticketMappings;
+    mapping(bytes32 => mapping(string => uniqueZoneTicket)) public ticketMappings;
 
     // Struct to store ticket zone information
     struct uniqueZoneTicket {
@@ -27,7 +27,7 @@ contract Ticket {
     }
 
     // Events to be emitted
-    event ZoneDetailsAdded(address organiser, uint256 eventID, string zoneName);
+    event ZoneDetailsAdded(address organiser, bytes32 eventID, string zoneName);
     event ZoneCapacityDecreased(
         uint256 eventID, 
         string zoneName, 
@@ -40,7 +40,7 @@ contract Ticket {
      * NOTE: If zone is already present, then input will overwrite existing zone details
      */
     function addZoneDetails(
-        uint256 eventID,
+        bytes32 eventID,
         string memory zoneNameInput,
         uint256 zoneCapacityInput,
         uint256 zonePriceInput,
@@ -67,19 +67,19 @@ contract Ticket {
     }
 
     // Getter function to get zone price
-    function getZonePrice(uint256 eventID, string memory zoneName) public view returns(uint256) {
+    function getZonePrice(bytes32 eventID, string memory zoneName) public view returns(uint256) {
         uniqueZoneTicket memory zoneTicketQueried = ticketMappings[eventID][zoneName];
         return zoneTicketQueried.zonePrice;
     }
 
     // Getter function to get zone capacity
-    function getZoneCapacity(uint256 eventID, string memory zoneName) public view returns(uint256) {
+    function getZoneCapacity(bytes32 eventID, string memory zoneName) public view returns(uint256) {
         uniqueZoneTicket memory zoneTicketQueried = ticketMappings[eventID][zoneName];
         return zoneTicketQueried.zoneCapacity;
     }
 
     // Getter function to get zone price cap
-    function getZonePriceCap(uint256 eventID, string memory zoneName) public view returns(uint256) {
+    function getZonePriceCap(bytes32 eventID, string memory zoneName) public view returns(uint256) {
         uniqueZoneTicket memory zoneTicketQueried = ticketMappings[eventID][zoneName];
         return zoneTicketQueried.priceCap;
     }

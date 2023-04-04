@@ -13,7 +13,7 @@ contract ResellMarket{
     User user;
 
     // mapping of TicketID to the price of the Ticket
-    mapping(uint256 => uint256) listedTickets;
+    mapping(bytes32 => uint256) listedTickets;
 
     // struct for offer details
     struct ticketOffer {
@@ -34,7 +34,7 @@ contract ResellMarket{
     }
 
     // modifier to see if the ticket is used
-    modifier ticketResellable(uint256 ticketId){
+    modifier ticketResellable(bytes32 ticketId){
         require(ticketNFT.getTicketStatus(ticketId) == false, "Ticket is already used. Cannot be listed");
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,,bool isTicketResellable,) = ticketFactory.getTicketCategory(ticketCategoryId);
@@ -43,15 +43,17 @@ contract ResellMarket{
     }
 
     // modifier to ensure function only callable by owner (which should be an user) 
-    modifier ownerOnly(uint256 ticketId){
-        address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
-        require(prevOwnerAddress == msg.sender, "Wrong owner");
-        require(user.checkUser(prevOwnerAddress) == true, "User is not a consumer! Cannot list in resell market");
+    modifier ownerOnly(bytes32 ticketId){
+        //address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
+        //require(prevOwnerAddress == tx.origin, "Wrong owner");
+        address owner = ticketNFT.getTicketOwner(ticketId);
+        require(owner == tx.origin, "Wrong owner");
+        require(user.checkUser(owner) == true, "User is not a consumer! Cannot list in resell market");
         _;
     }
 
     // modifier to ensure price listed do not exceed max price
-    modifier priceExceed(uint256 ticketId, uint256 price){
+    modifier priceExceed(bytes32 ticketId, uint256 price){
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
         require( price <= ticketPriceCap, "Price listing is over price cap!");
@@ -59,41 +61,42 @@ contract ResellMarket{
     }
 
     // modifier to ensure ticket is listed
-    modifier isListed(uint256 ticketId){
+    modifier isListed(bytes32 ticketId){
         require(listedTickets[ticketId] != 0, "Ticket not listed!");
         _;
     }
 
     //event to list successfully
-    event ticketListed(uint256 ticketId);
+    event ticketListed(bytes32 ticketId);
 
     //event to unlist successfully
-    event ticketUnlisted(uint256 ticketId);
+    event ticketUnlisted(bytes32 ticketId);
 
-    // // event to buy successfully
-    // event ticketBought(uint256 ticketId);
+    // event to buy successfully
+    event ticketBought(bytes32 ticketId);
+
 
     // event to make offer for ticket (by buyers)
-    event offerSubmitted(uint256 ticketId, uint256 offerPrice, address buyerAddress);
+    event offerSubmitted(bytes32 ticketId, uint256 offerPrice, address buyerAddress);
 
     // event to sell ticket to highest offer (by ticket owner)
-    event offersSettled(uint256 ticketId, uint256 offerPrice, address buyerAddress);
+    event offersSettled(bytes32 ticketId, uint256 offerPrice, address buyerAddress);
 
     // function to list ticket
-    function list(uint256 ticketId, uint256 price) public ownerOnly(ticketId) ticketResellable(ticketId) priceExceed(ticketId, price){
+    function list(bytes32 ticketId, uint256 price) public ownerOnly(ticketId) ticketResellable(ticketId) priceExceed(ticketId, price){
         ticketNFT.transferOwnership(ticketId, address(this));
         listedTickets[ticketId] = price;
         emit ticketListed(ticketId);
     }
 
     // function to unlist ticket
-    function unlist(uint ticketId) public ownerOnly(ticketId) isListed(ticketId){
+    function unlist(bytes32 ticketId) public ownerOnly(ticketId) isListed(ticketId){
         listedTickets[ticketId] = 0;
         emit ticketUnlisted(ticketId);
     }
 
     // function to check the price of the ticket
-    function checkPrice(uint256 ticketId) public view isListed(ticketId) returns (uint256) {
+    function checkPrice(bytes32 ticketId) public view isListed(ticketId) returns (uint256) {
         return listedTickets[ticketId];
     }
 
@@ -101,6 +104,31 @@ contract ResellMarket{
     function checkHighestBidPrice(uint256 ticketId) public view isListed(ticketId) returns (uint256) {
         require(ticketOfferPresent[ticketId] == true, 'No bids present');
         return ticketHighestBidder[ticketId].offerPrice;
+    }
+
+    // function for sellers to settle offer (sell to highest bidder)
+    function settleOfffer(uint256 ticketId) public ownerOnly(ticketId) isListed(ticketId) {
+
+        // Require that there are offers for ticket
+        require(ticketOfferPresent[ticketId] == true, "No offers to settle");
+
+        // Get details of offer
+        ticketOffer memory offerQueried = ticketHighestBidder[ticketId];
+
+        // Transfer bid amount to ticket owner
+        address payable tickerOwnerAddress = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+        tickerOwnerAddress.transfer(offerQueried.offerPrice);
+
+        // Transfer ownership of ticket
+        ticketNFT.transferOwnership(ticketId, offerQueried.offerBidder);
+
+        // Emit successful event
+        emit offersSettled(ticketId, offerQueried.offerPrice, offerQueried.offerBidder);
+        
+        // Delete offer
+        delete ticketHighestBidder[ticketId];
+        delete ticketOfferPresent[ticketId];
+        
     }
 
     // // function to buy the ticket 
@@ -113,6 +141,17 @@ contract ResellMarket{
     //     emit ticketBought(ticketId);
     // }
 
+    // function to buy the ticket 
+    function buy(bytes32 ticketId) public payable isListed(ticketId){
+        require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
+        // transfer money to the prev owner 
+        //address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
+        address payable recipient = address(uint160(ticketNFT.getTicketOwner(ticketId)));
+        recipient.transfer(msg.value);
+        ticketNFT.transferOwnershipResell(ticketId, tx.origin);
+        emit ticketBought(ticketId);
+    }
+    
     // function for buyers to submit offer for ticket
     function offer(uint256 ticketId) public payable isListed(ticketId) {
         // Make sure that offer price < price cap
@@ -143,28 +182,4 @@ contract ResellMarket{
         emit offerSubmitted(ticketId, msg.value, msg.sender);
     }
 
-    // function for sellers to settle offer (sell to highest bidder)
-    function settleOfffer(uint256 ticketId) public ownerOnly(ticketId) isListed(ticketId) {
-
-        // Require that there are offers for ticket
-        require(ticketOfferPresent[ticketId] == true, "No offers to settle");
-
-        // Get details of offer
-        ticketOffer memory offerQueried = ticketHighestBidder[ticketId];
-
-        // Transfer bid amount to ticket owner
-        address payable tickerOwnerAddress = address(uint160(ticketNFT.getPrevOwner(ticketId)));
-        tickerOwnerAddress.transfer(offerQueried.offerPrice);
-
-        // Transfer ownership of ticket
-        ticketNFT.transferOwnership(ticketId, offerQueried.offerBidder);
-
-        // Emit successful event
-        emit offersSettled(ticketId, offerQueried.offerPrice, offerQueried.offerBidder);
-        
-        // Delete offer
-        delete ticketHighestBidder[ticketId];
-        delete ticketOfferPresent[ticketId];
-        
-    }
 }

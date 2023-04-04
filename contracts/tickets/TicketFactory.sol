@@ -13,7 +13,7 @@ contract TicketFactory {
     }
 
     struct TicketCategory {
-        uint256 eventID;
+        bytes32 eventID;
         string categoryName;
         uint256 ticketPrice;
         uint256 totalSupply;
@@ -24,17 +24,30 @@ contract TicketFactory {
     }
 
     mapping(uint256 => TicketCategory) public ticketCategories;
-    uint256 ticketCategoryID = 0;
+    uint256 ticketCategoryID = 1;
+
+    event TicketCreated(uint256 ticketCategory, uint256 ticketPrice);
+
+    // Modifier to ensure function is called by authorised organisers
+    modifier organisersOnly() {
+        //require(userContractInstance.checkOrganiser(msg.sender) == true, "msg.sender not organiser");
+        require(
+            userContractInstance.checkOrganiser(tx.origin) == true,
+            "msg.sender not organiser"
+        );
+
+        _;
+    }
 
     function createTicketCategory(
-        uint256 eventID,
+        bytes32 eventID,
         string memory categoryName,
         uint256 ticketPrice,
         uint256 totalSupply,
         uint256 priceCap,
         bool isResellable,
         uint256 maxTixPerUser
-    ) public returns (uint256) {
+    ) public organisersOnly returns (uint256) {
 
         // Create TicketCategory
         TicketCategory memory newTicketCategory = TicketCategory(
@@ -55,11 +68,13 @@ contract TicketFactory {
         
         //uint256 ticketCategoryID = uint256(keccak256(abi.encodePacked(eventID, categoryName, ticketPrice, priceCap, isResellable)));
         ticketCategories[ticketCategoryID] = newTicketCategory;
-        ticketCategoryID++;
+        //ticketCategoryID++;
 
         // Update event capacity occupied from event contract
         eventContractInstance.updateEventCapacityOccupied(eventID, totalSupply);
 
+        //emit event
+        emit TicketCreated(ticketCategoryID, ticketPrice);
         return ticketCategoryID;
     }
 
@@ -68,8 +83,8 @@ contract TicketFactory {
         _;
     }
 
-    function getTicketCategory(uint256 id) validTicketCategory(id) public view returns (
-        uint256, 
+    function getTicketCategory(uint256 id) public view returns (// validTicketCategory(id) removed valid ticket cat check cos its in BN form
+        bytes32, 
         string memory, 
         uint256, 
         uint256, 
