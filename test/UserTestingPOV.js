@@ -302,7 +302,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
 //   });
 
 
-  it("Test 4: User cannot buy more tickets than the capped amount", async () => {
+  it("Test 3: User cannot buy more tickets than the capped amount", async () => {
 
     // Create jaychou event with 10 tickets
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -363,7 +363,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
   });
 
-  it("Test 5: correct amount of money must be provided for user to buy tickets", async () => {
+  it("Test 4: correct amount of money must be provided for user to buy tickets", async () => {
 
     // Create jaychou event with 10 tickets
     let createJayChouEvent = await eventInstance.createEvent("JayChou", 100, {
@@ -413,7 +413,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
   }) 
 
-  it('Test 6: Check that tickets can be refunded', async() =>{
+  it('Test 5: Check that tickets can be refunded', async() =>{
           //set the admin 
           let account1Admin = await userInstance.setAdmin(
             accounts[1],
@@ -478,7 +478,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
         truffleAssert.eventEmitted(refundTicket, "TicketRefunded");
      });
       
-     it('Test 7: ticket that does not belong to buyer cannot be refunded', async() =>{
+     it('Test 6: ticket that does not belong to buyer cannot be refunded', async() =>{
       //set the admin 
       let account1Admin = await userInstance.setAdmin(
         accounts[1],
@@ -542,7 +542,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
 
  });
 
-  it("Test 8: Buyer can list ticket in resell market", async () => {
+  it("Test 7: Buyer can list ticket in resell market", async () => {
   
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent(
@@ -597,7 +597,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     truffleAssert.eventEmitted(listTicketOnResellMarket, "ticketListed");
   });
 
-  it("Test 9: Buyer cannot list more than capped amount for ticket in resell market", async () => {
+  it("Test 8: Buyer cannot list more than capped amount for ticket in resell market", async () => {
 
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
@@ -643,7 +643,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
   });
   
-  it("Test 10: Buyer cannot list unresellable ticket", async () => {
+  it("Test 9: Buyer cannot list unresellable ticket", async () => {
 
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
@@ -689,7 +689,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
   });
 
-  it("Test 11: Buyer cannot list ticket that they did not buy", async () => {
+  it("Test 10: Buyer cannot list ticket that they did not buy", async () => {
 
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
@@ -735,7 +735,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
   });
   
-  it("Test 12: Buyer can unlist ticket", async () => {
+  it("Test 11: Buyer can unlist ticket", async () => {
      
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou",1000,{ from: accounts[2] });
@@ -782,7 +782,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
 
   });
 
-  it("Test 13: Only Buyer can unlist ticket", async () => {
+  it("Test 12: Only Buyer can unlist ticket", async () => {
     //set the admin
     let account1Admin = await userInstance.setAdmin(accounts[1], {
      from: accounts[0],
@@ -844,7 +844,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     );
  });
 
-  it("Test 14: Buyer can only list ticket that they bought", async () => {
+  it("Test 13: Buyer can only list ticket that they bought", async () => {
    
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -902,7 +902,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
       );
   });
 
-  it("Test 15: Buyer can buy a ticket on the resell market", async () => {
+  it("Test 14: Buyer can buy a ticket on the resell market", async () => {
    
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -956,7 +956,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     truffleAssert.eventEmitted(buyTicketonResellMarket, "ticketBought");
   });
 
-  it("Test 16: Buyer cannot buy a ticket on resell market with insufficient money", async () => {
+  it("Test 15: Buyer cannot buy a ticket on resell market with insufficient money", async () => {
   
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
@@ -1014,7 +1014,7 @@ contract("Authenticket - User Testing POV", function (accounts) {
     
   });
 
-  it("Test 17: Buyer cannot buy a unlisted ticket on resell market", async () => {
+  it("Test 16: Buyer cannot buy a unlisted ticket on resell market", async () => {
    
     // Let organiser create an Event
     let makeEvent = await eventInstance.createEvent("JayChou", 1000, {
