@@ -22,10 +22,10 @@ contract ResellMarket{
     }
 
     // Mapping to highest bidder's ticketID for each ticketID
-    mapping(uint256 => ticketOffer) ticketHighestBidder;
+    mapping(bytes32 => ticketOffer) ticketHighestBidder;
     
     // Mapping of ticketID to boolean value of whether offer present
-    mapping(uint256 => bool) ticketOfferPresent;
+    mapping(bytes32 => bool) ticketOfferPresent;
 
     constructor(TicketNFT ticketContract, TicketFactory ticketFactoryContract, User userContract) public {
         ticketNFT = ticketContract;
@@ -101,13 +101,13 @@ contract ResellMarket{
     }
 
     // function to check the price of the ticket
-    function checkHighestBidPrice(uint256 ticketId) public view isListed(ticketId) returns (uint256) {
+    function checkHighestBidPrice(bytes32 ticketId) public view isListed(ticketId) returns (uint256) {
         require(ticketOfferPresent[ticketId] == true, 'No bids present');
         return ticketHighestBidder[ticketId].offerPrice;
     }
 
     // function for sellers to settle offer (sell to highest bidder)
-    function settleOfffer(uint256 ticketId) public ownerOnly(ticketId) isListed(ticketId) {
+    function settleOfffer(bytes32 ticketId) public ownerOnly(ticketId) isListed(ticketId) {
 
         // Require that there are offers for ticket
         require(ticketOfferPresent[ticketId] == true, "No offers to settle");
@@ -153,7 +153,7 @@ contract ResellMarket{
     }
     
     // function for buyers to submit offer for ticket
-    function offer(uint256 ticketId) public payable isListed(ticketId) {
+    function offer(bytes32 ticketId) public payable isListed(ticketId) {
         // Make sure that offer price < price cap
         uint256 ticketCategoryId = ticketNFT.getTicketCategory(ticketId);
         (,,,,,uint256 ticketPriceCap,,) = ticketFactory.getTicketCategory(ticketCategoryId);
