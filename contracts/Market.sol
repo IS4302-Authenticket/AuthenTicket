@@ -74,8 +74,6 @@ contract Market {
         address buyer
     );
 
-    //event TicketBought(bytes32 ticketId);
-
     // Listing and unlisting event
     function listEvent(bytes32 eventId) public eventOwnerOnly(eventId) {
         listEventName[eventId] = eventContract.getEventName(eventId);
