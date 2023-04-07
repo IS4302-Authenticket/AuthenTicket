@@ -124,12 +124,8 @@ contract Market {
         );
 
         bytes32 ticketIdFirst = ticketIds[0];
-        emit TicketBought(
-            ticketIdFirst,
-            ticketCategoryId,
-            numTickets,
-            tx.origin
-        );
+        address owner = ticketContract.getTicketOwner(ticketIdFirst);
+        emit TicketBought(ticketIdFirst, ticketCategoryId, numTickets, owner);
         //for(uint256 index = 0; index < ticketIds.length; index++){
         //   emit TicketBought(ticketIds[index]);
         //}
@@ -152,6 +148,11 @@ contract Market {
 
     // Refund tickets
     function refundTickets(bytes32 ticketId) public payable {
+        // ticket owner only
+        require(
+            ticketContract.getTicketOwner(ticketId) == msg.sender,
+            "Wrong Owner!"
+        );
         // Refund buyer and transfer ticket
         address payable recipient = address(
             uint160(ticketContract.getTicketOwner(ticketId))

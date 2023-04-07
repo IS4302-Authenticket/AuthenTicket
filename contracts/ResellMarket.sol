@@ -57,9 +57,9 @@ contract ResellMarket {
         //address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
         //require(prevOwnerAddress == tx.origin, "Wrong owner");
         address owner = ticketNFT.getTicketOwner(ticketId);
-        require(owner == tx.origin, "Wrong owner");
+        require(owner == tx.origin, "Wrong owner!");
         require(
-            user.checkUser(owner) == true,
+            user.checkUser(owner),
             "User is not a consumer! Cannot list in resell market"
         );
         _;
@@ -119,9 +119,15 @@ contract ResellMarket {
     }
 
     // function to unlist ticket
-    function unlist(
-        bytes32 ticketId
-    ) public ownerOnly(ticketId) isListed(ticketId) {
+    function unlist(bytes32 ticketId) public isListed(ticketId) {
+        address prevOwner = ticketNFT.getPrevOwner(ticketId);
+        address currOwner = ticketNFT.getTicketOwner(ticketId);
+        require(prevOwner == tx.origin, "Wrong owner");
+        require(
+            currOwner == address(this),
+            "Ticket is not on resell market anymore"
+        );
+        ticketNFT.transferOwnershipResell(ticketId, prevOwner);
         listedTickets[ticketId] = 0;
         emit ticketUnlisted(ticketId);
     }
@@ -142,9 +148,11 @@ contract ResellMarket {
     }
 
     // function for sellers to settle offer (sell to highest bidder)
-    function settleOfffer(
-        bytes32 ticketId
-    ) public ownerOnly(ticketId) isListed(ticketId) {
+    function settleOffer(bytes32 ticketId) public isListed(ticketId) {
+        require(
+            tx.origin == ticketNFT.getPrevOwner(ticketId),
+            "Not the ticket original owner"
+        );
         // Require that there are offers for ticket
         require(ticketOfferPresent[ticketId] == true, "No offers to settle");
 
@@ -158,7 +166,7 @@ contract ResellMarket {
         tickerOwnerAddress.transfer(offerQueried.offerPrice);
 
         // Transfer ownership of ticket
-        ticketNFT.transferOwnership(ticketId, offerQueried.offerBidder);
+        ticketNFT.transferOwnershipResell(ticketId, offerQueried.offerBidder);
 
         // Emit successful event
         emit offersSettled(
