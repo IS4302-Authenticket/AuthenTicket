@@ -3,7 +3,6 @@ pragma solidity ^0.5.0;
 import "./User.sol";
 
 contract Event {
-
     // Instantiate user contract here to ensure that only organisers can create events
     User userContractInstance;
 
@@ -46,11 +45,8 @@ contract Event {
         uint256 eventMaxCapacityInput
     ) public organisersOnly returns (bytes32) {
         bytes32 eventID = keccak256(
-            abi.encodePacked(block.timestamp, tx.origin)
+            abi.encodePacked(block.timestamp, tx.origin, eventNameInput)
         );
-        //bytes32 hashVal = keccak256(abi.encodePacked(block.timestamp, msg.sender));
-        //uint256 eventID = uint256(hashVal);
-        //uint256 eventID = uint256(eventMaxCapacityInput);
 
         uniqueEvent memory newEvent = uniqueEvent(
             tx.origin,

@@ -23,10 +23,9 @@ contract TicketFactory {
         uint256 maxTixPerUser;
     }
 
-    mapping(uint256 => TicketCategory) public ticketCategories;
-    uint256 ticketCategoryID = 1;
+    mapping(bytes32 => TicketCategory) public ticketCategories;
 
-    event TicketCreated(uint256 ticketCategory, uint256 ticketPrice);
+    event TicketCreated(bytes32 ticketCategory, uint256 ticketPrice);
 
     // Modifier to ensure function is called by authorised organisers
     modifier organisersOnly() {
@@ -47,8 +46,7 @@ contract TicketFactory {
         uint256 priceCap,
         bool isResellable,
         uint256 maxTixPerUser
-    ) public organisersOnly returns (uint256) {
-
+    ) public organisersOnly returns (bytes32) {
         // Create TicketCategory
         TicketCategory memory newTicketCategory = TicketCategory(
             eventID,
@@ -62,13 +60,21 @@ contract TicketFactory {
         );
 
         // Check if adding ticket supply from this category will exceed event maxCapacity
-        uint256 currCapacityOccupied = eventContractInstance.getEventCapacityOccupied(eventID);
-        uint256 maxCapacityOccupied = eventContractInstance.getEventMaxCapacity(eventID);
-        require((currCapacityOccupied + totalSupply) <= maxCapacityOccupied, 'Cannot create ticket category: total supply > max supply');
-        
-        //uint256 ticketCategoryID = uint256(keccak256(abi.encodePacked(eventID, categoryName, ticketPrice, priceCap, isResellable)));
+        uint256 currCapacityOccupied = eventContractInstance
+            .getEventCapacityOccupied(eventID);
+        uint256 maxCapacityOccupied = eventContractInstance.getEventMaxCapacity(
+            eventID
+        );
+        require(
+            (currCapacityOccupied + totalSupply) <= maxCapacityOccupied,
+            "Cannot create ticket category: total supply > max supply"
+        );
+
+        // create ticket category ID
+        bytes32 ticketCategoryID = keccak256(
+            abi.encodePacked(eventID, categoryName)
+        );
         ticketCategories[ticketCategoryID] = newTicketCategory;
-        //ticketCategoryID++;
 
         // Update event capacity occupied from event contract
         eventContractInstance.updateEventCapacityOccupied(eventID, totalSupply);
@@ -78,40 +84,53 @@ contract TicketFactory {
         return ticketCategoryID;
     }
 
-    modifier validTicketCategory(uint256 id) {
-        require(ticketCategories[id].eventID > 0, "Ticket category does not exist");
+    modifier validTicketCategory(bytes32 id) {
+        require(
+            ticketCategories[id].eventID > 0,
+            "Ticket category does not exist"
+        );
         _;
     }
 
-    function getTicketCategory(uint256 id) public view returns (// validTicketCategory(id) removed valid ticket cat check cos its in BN form
-        bytes32, 
-        string memory, 
-        uint256, 
-        uint256, 
-        uint256, 
-        uint256, 
-        bool,
-        uint256)
+    function getTicketCategory(
+        bytes32 id
+    )
+        public
+        view
+        validTicketCategory(id)
+        returns (
+            bytes32,
+            string memory,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            bool,
+            uint256
+        )
     {
         TicketCategory memory ticketCategory = ticketCategories[id];
         return (
-            ticketCategory.eventID, 
-            ticketCategory.categoryName, 
-            ticketCategory.ticketPrice, 
-            ticketCategory.totalSupply, 
-            ticketCategory.remaining, 
-            ticketCategory.priceCap, 
+            ticketCategory.eventID,
+            ticketCategory.categoryName,
+            ticketCategory.ticketPrice,
+            ticketCategory.totalSupply,
+            ticketCategory.remaining,
+            ticketCategory.priceCap,
             ticketCategory.isResellable,
             ticketCategory.maxTixPerUser
         );
     }
 
-    function ticketSold(uint256 categoryId) validTicketCategory(categoryId) public {
+    function ticketSold(
+        bytes32 categoryId
+    ) public validTicketCategory(categoryId) {
         ticketCategories[categoryId].remaining -= 1;
     }
 
-    function ticketRefund(uint256 categoryId) validTicketCategory(categoryId) public {
+    function ticketRefund(
+        bytes32 categoryId
+    ) public validTicketCategory(categoryId) {
         ticketCategories[categoryId].remaining += 1;
     }
-
 }
