@@ -110,8 +110,6 @@ contract("Authenticket - User Testing POV", function (accounts) {
         truffleAssert.eventEmitted(acc3BuyJayChouVIPTicket, "TicketBought");
         jayChouVipTicketID = acc3BuyJayChouVIPTicket["logs"][0]["args"]["0"];
         let buyer = acc3BuyJayChouVIPTicket["logs"][0]["args"]["3"];
-        console.log("jayChouVipTicketID: ", jayChouVipTicketID.toString());
-        console.log("buyer: ", buyer.toString());
         assert.equal(buyer, accounts[3]);
     });
 
