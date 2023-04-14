@@ -54,8 +54,6 @@ contract ResellMarket {
 
     // modifier to ensure function only callable by owner (which should be an user)
     modifier ownerOnly(bytes32 ticketId) {
-        //address prevOwnerAddress = ticketNFT.getPrevOwner(ticketId);
-        //require(prevOwnerAddress == tx.origin, "Wrong owner");
         address owner = ticketNFT.getTicketOwner(ticketId);
         require(owner == tx.origin, "Wrong owner!");
         require(
@@ -180,16 +178,6 @@ contract ResellMarket {
         delete ticketOfferPresent[ticketId];
     }
 
-    // // function to buy the ticket
-    // function buy(uint256 ticketId) public payable isListed(ticketId){
-    //     require(msg.value >= listedTickets[ticketId], "Insufficient money to buy the ticket");
-    //     // transfer money to the prev owner
-    //     address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
-    //     recipient.transfer(msg.value);
-    //     ticketNFT.transferOwnership(ticketId, msg.sender);
-    //     emit ticketBought(ticketId);
-    // }
-
     // function to buy the ticket
     function buy(bytes32 ticketId) public payable isListed(ticketId) {
         require(
@@ -197,7 +185,6 @@ contract ResellMarket {
             "Insufficient money to buy the ticket"
         );
         // transfer money to the prev owner
-        //address payable recipient = address(uint160(ticketNFT.getPrevOwner(ticketId)));
         address payable recipient = address(
             uint160(ticketNFT.getTicketOwner(ticketId))
         );

@@ -115,7 +115,6 @@ contract Market {
             msg.value == listPrice[ticketCategoryId] * numTickets,
             "Incorrect amount of ether sent"
         );
-        //bytes32[] memory ticketIds = ticketContract.purchaseTicket(msg.sender, eventId, ticketCategoryId, numTickets);
         bytes32[] memory ticketIds = ticketContract.purchaseTicket(
             tx.origin,
             eventId,
@@ -126,24 +125,7 @@ contract Market {
         bytes32 ticketIdFirst = ticketIds[0];
         address owner = ticketContract.getTicketOwner(ticketIdFirst);
         emit TicketBought(ticketIdFirst, ticketCategoryId, numTickets, owner);
-        //for(uint256 index = 0; index < ticketIds.length; index++){
-        //   emit TicketBought(ticketIds[index]);
-        //}
         return ticketIds;
-        /*
-        address recepient = address(this);
-        address payable recepient2 = address(uint160(recepient));
-        recepient2.transfer(msg.value);
-        //address payable recipient = address(uint160(address(this)));  
-        //recipient.transfer(msg.value);
-
-        for (uint256 i = 0; i < ticketIds.length; i++) {
-            bytes32 ticketId = ticketIds[i];
-            //ticketContract.transferOwnership(ticketId, msg.sender);
-            ticketContract.transferOwnership(ticketId, tx.origin);
-        }
-        emit TicketBought(ticketCategoryId, numTickets);
-        return ticketIds;*/
     }
 
     // Refund tickets

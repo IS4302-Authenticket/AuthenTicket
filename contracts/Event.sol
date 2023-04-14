@@ -32,7 +32,6 @@ contract Event {
 
     // Modifier to ensure function is called by organisers
     modifier organisersOnly() {
-        //require(userContractInstance.checkOrganiser(msg.sender) == true, "msg.sender not organiser");
         require(
             userContractInstance.checkOrganiser(tx.origin) == true,
             "msg.sender not organiser"

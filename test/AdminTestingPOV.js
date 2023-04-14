@@ -31,23 +31,6 @@ contract ('Authenticket - Admin Testing POV', function(accounts){
     console.log("Testing Authenticket application from Admin user POV");
     
     it('Test 1: Test that contract master is the first account', async() => {
-       /* let masterTest1 = await userInstance.checkAdmin(
-            accounts[0],
-            {from: accounts[0]}
-        );
-        let masterTest2 = await userInstance.checkOrganiser(
-            accounts[0],
-            {from: accounts[0]}
-        );
-        let masterTest3 = await userInstance.checkUser(
-            accounts[0],
-            {from: accounts[0]}
-        );
-        //master cannot be any of the above users 
-        assert(masterTest1 == false, '1st test that deployer is User contract master failed');
-        assert(masterTest2 == false, '2nd test that deployer is User contract master failed');
-        assert(masterTest3 == false, '3rd test that deployer is User contract master failed');
-        */
         //only master can set admin
         let setAdmin = await userInstance.setAdmin(
             accounts[1],
@@ -123,31 +106,6 @@ contract ('Authenticket - Admin Testing POV', function(accounts){
         assert(checkUserByAdmin == true, 'Admin supposed to be able to set user');
         assert(checkUserByOrganiser == true, 'Organiser supposed to be able to set user');
     });
-
-    //if got time, check how to assert for modifier 
-    /*it('Test 5: Check that only Master can set admin', async()=>{
-        let setAdminByAdmin = await userInstance.setAdmin(
-            accounts[4],
-            {from: accounts[1]}
-        );
-
-        let setAdminByOrganiser = await userInstance.setAdmin(
-            accounts[4],
-            {from: accounts[2]}
-        );
-
-        let setAdminByUser = await userInstance.setAdmin(
-            accounts[4],
-            {from: accounts[3]}
-        );
-
-        assert.expect(setAdminByAdmin.to.be.rejected);
-
-        let checkAdmin = await userInstance.checkAdmin(
-            accounts[1],
-            {from: accounts[0]}
-        );
-    })*/
  
 
 })
